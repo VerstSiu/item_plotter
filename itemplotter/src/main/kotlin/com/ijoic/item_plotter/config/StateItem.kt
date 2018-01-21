@@ -16,4 +16,9 @@ internal interface StateItem {
    * Upgrade state value.
    */
   fun upgradeValue()
+
+  /**
+   * Returns state changed status, and preform config value upgrade.
+   */
+  fun checkUpgrade(): Boolean
 }

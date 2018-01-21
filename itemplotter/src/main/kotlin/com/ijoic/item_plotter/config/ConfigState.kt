@@ -29,9 +29,7 @@ class ConfigState<VALUE>(
    */
   fun checkUpgrade(value: VALUE): Boolean {
     setValue(value)
-    val changed = isChanged()
-    upgradeValue()
-    return changed
+    return checkUpgrade()
   }
 
   /**
@@ -51,5 +49,11 @@ class ConfigState<VALUE>(
   override fun upgradeValue() {
     oldValue = newValue
     stateInit = true
+  }
+
+  override fun checkUpgrade(): Boolean {
+    val changed = isChanged()
+    upgradeValue()
+    return changed
   }
 }

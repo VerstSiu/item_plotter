@@ -35,4 +35,10 @@ class StatePool: StateItem {
       }
     }
   }
+
+  override fun checkUpgrade(): Boolean {
+    val changed = isChanged()
+    upgradeValue()
+    return changed
+  }
 }
