@@ -18,6 +18,7 @@
 package com.ijoic.item_plotter.data
 
 import com.ijoic.item_plotter.ItemData
+import com.ijoic.item_plotter.util.LazyLoader
 import com.ijoic.item_plotter.value.TransformReader
 
 /**
@@ -34,11 +35,34 @@ class TransformItemData<ITEM>: ItemData {
    */
   var item: ITEM? = null
 
-  /**
-   * String reader impl.
-   */
-  val stringReaderImpl = TransformReader<ITEM, String>(providerItem)
+  val stringReaderImpl = createLazyTransformReader<ITEM, String>(providerItem)
+  val intReaderImpl = createLazyTransformReader<ITEM, Int>(providerItem)
+  val longReaderImpl = createLazyTransformReader<ITEM, Long>(providerItem)
+  val floatReaderImpl = createLazyTransformReader<ITEM, Float>(providerItem)
+  val doubleReaderImpl = createLazyTransformReader<ITEM, Double>(providerItem)
+  val booleanReaderImpl = createLazyTransformReader<ITEM, Boolean>(providerItem)
 
   override fun stringReader() = stringReaderImpl
+
+  override fun intReader() = intReaderImpl
+
+  override fun longReader() = longReaderImpl
+
+  override fun floatReader() = floatReaderImpl
+
+  override fun doubleReader() = doubleReaderImpl
+
+  override fun booleanReader() = booleanReaderImpl
+
+  companion object {
+    /**
+     * Returns lazy simple reader instance.
+     *
+     * @param providerItem provider item.
+     */
+    private fun<ITEM, T> createLazyTransformReader(providerItem: () -> ITEM?): LazyLoader<TransformReader<ITEM, T>> {
+      return LazyLoader<TransformReader<ITEM, T>>({ TransformReader<ITEM, T>(providerItem) })
+    }
+  }
 
 }

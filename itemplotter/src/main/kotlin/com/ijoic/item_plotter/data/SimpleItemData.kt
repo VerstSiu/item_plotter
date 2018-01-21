@@ -18,6 +18,7 @@
 package com.ijoic.item_plotter.data
 
 import com.ijoic.item_plotter.ItemData
+import com.ijoic.item_plotter.util.LazyLoader
 import com.ijoic.item_plotter.value.SimpleReader
 
 /**
@@ -28,11 +29,32 @@ import com.ijoic.item_plotter.value.SimpleReader
  */
 class SimpleItemData: ItemData {
 
-  /**
-   * String reader impl.
-   */
-  val stringReaderImpl = SimpleReader<String>()
+  val stringReaderImpl = createLazySimpleReader<String>()
+  val intReaderImpl = createLazySimpleReader<Int>()
+  val longReaderImpl = createLazySimpleReader<Long>()
+  val floatReaderImpl = createLazySimpleReader<Float>()
+  val doubleReaderImpl = createLazySimpleReader<Double>()
+  val booleanReaderImpl = createLazySimpleReader<Boolean>()
 
   override fun stringReader() = stringReaderImpl
+
+  override fun intReader() = intReaderImpl
+
+  override fun longReader() = longReaderImpl
+
+  override fun floatReader() = floatReaderImpl
+
+  override fun doubleReader() = doubleReaderImpl
+
+  override fun booleanReader() = booleanReaderImpl
+
+  companion object {
+    /**
+     * Returns lazy simple reader instance.
+     */
+    private fun<T> createLazySimpleReader(): LazyLoader<SimpleReader<T>> {
+      return LazyLoader<SimpleReader<T>>({ SimpleReader<T>() })
+    }
+  }
 
 }

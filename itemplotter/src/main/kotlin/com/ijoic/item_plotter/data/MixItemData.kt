@@ -18,8 +18,8 @@
 package com.ijoic.item_plotter.data
 
 import com.ijoic.item_plotter.ItemData
+import com.ijoic.item_plotter.util.LazyLoader
 import com.ijoic.item_plotter.value.MixReader
-import com.ijoic.item_plotter.value.TransformReader
 
 /**
  * Mix item data.
@@ -35,11 +35,34 @@ class MixItemData<ITEM>: ItemData {
    */
   var item: ITEM? = null
 
-  /**
-   * String reader impl.
-   */
-  val stringReaderImpl = MixReader<ITEM, String>(providerItem)
+  val stringReaderImpl = createLazyMixReader<ITEM, String>(providerItem)
+  val intReaderImpl = createLazyMixReader<ITEM, Int>(providerItem)
+  val longReaderImpl = createLazyMixReader<ITEM, Long>(providerItem)
+  val floatReaderImpl = createLazyMixReader<ITEM, Float>(providerItem)
+  val doubleReaderImpl = createLazyMixReader<ITEM, Double>(providerItem)
+  val booleanReaderImpl = createLazyMixReader<ITEM, Boolean>(providerItem)
 
   override fun stringReader() = stringReaderImpl
+
+  override fun intReader() = intReaderImpl
+
+  override fun longReader() = longReaderImpl
+
+  override fun floatReader() = floatReaderImpl
+
+  override fun doubleReader() = doubleReaderImpl
+
+  override fun booleanReader() = booleanReaderImpl
+
+  companion object {
+    /**
+     * Returns lazy simple reader instance.
+     *
+     * @param providerItem provider item.
+     */
+    private fun<ITEM, T> createLazyMixReader(providerItem: () -> ITEM?): LazyLoader<MixReader<ITEM, T>> {
+      return LazyLoader<MixReader<ITEM, T>>({ MixReader<ITEM, T>(providerItem) })
+    }
+  }
 
 }

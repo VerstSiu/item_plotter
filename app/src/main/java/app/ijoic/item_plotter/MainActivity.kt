@@ -72,8 +72,10 @@ class MainActivity : AppCompatActivity() {
     itemView.postDelayed({
       val itemData = TransformItemData<User>()
       val user = User("Jenny")
-      itemData.stringReaderImpl.addTransform("user_name", { it.name })
-      itemData.stringReaderImpl.addTransform("user_age", { it.age.toString() })
+      itemData.stringReaderImpl.loadInstance().apply {
+        addTransform("user_name", { it.name })
+        addTransform("user_age", { it.age.toString() })
+      }
       itemView.itemData = itemData
 
       itemData.item = user

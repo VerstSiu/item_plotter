@@ -17,6 +17,7 @@
  */
 package com.ijoic.item_plotter
 
+import com.ijoic.item_plotter.util.LazyLoader
 import com.ijoic.item_plotter.value.ValueReader
 
 /**
@@ -29,5 +30,30 @@ interface ItemData {
   /**
    * String reader.
    */
-  fun stringReader(): ValueReader<String>
+  fun stringReader(): LazyLoader<ValueReader<String>>
+
+  /**
+   * Int reader.
+   */
+  fun intReader(): LazyLoader<ValueReader<Int>>
+
+  /**
+   * Long reader.
+   */
+  fun longReader(): LazyLoader<ValueReader<Long>>
+
+  /**
+   * Float reader.
+   */
+  fun floatReader(): LazyLoader<ValueReader<Float>>
+
+  /**
+   * Double reader.
+   */
+  fun doubleReader(): LazyLoader<ValueReader<Double>>
+
+  /**
+   * Boolean reader.
+   */
+  fun booleanReader(): LazyLoader<ValueReader<Boolean>>
 }

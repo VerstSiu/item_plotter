@@ -50,15 +50,96 @@ abstract class BasePlotter: Plotter {
    * Returns bind string.
    *
    * @param itemData item data.
+   * @param bindKey bind key.
    * @param unbindReplace unbind replace value for which itemData is null or bindKey not set.
    */
-  protected fun getBindString(itemData: ItemData?, unbindReplace: String? = null): String? {
-    val bindKey = this.bindKey
+  protected fun getBindString(itemData: ItemData?, bindKey: String? = null, unbindReplace: String? = null): String? {
+    val readKey = bindKey ?: this.bindKey
 
-    if (itemData == null || bindKey == null) {
+    if (itemData == null || readKey == null) {
       return unbindReplace
     }
-    return itemData.stringReader().get(bindKey)
+    return itemData.stringReader().loadInstance().get(readKey)
+  }
+
+  /**
+   * Returns bind int.
+   *
+   * @param itemData item data.
+   * @param bindKey bind key.
+   * @param unbindReplace unbind replace value for which itemData is null or bindKey not set.
+   */
+  protected fun getBindInt(itemData: ItemData?, bindKey: String? = null, unbindReplace: Int = 0): Int {
+    val readKey = bindKey ?: this.bindKey
+
+    if (itemData == null || readKey == null) {
+      return unbindReplace
+    }
+    return itemData.intReader().loadInstance().get(readKey) ?: unbindReplace
+  }
+
+  /**
+   * Returns bind long.
+   *
+   * @param itemData item data.
+   * @param bindKey bind key.
+   * @param unbindReplace unbind replace value for which itemData is null or bindKey not set.
+   */
+  protected fun getBindLong(itemData: ItemData?, bindKey: String? = null, unbindReplace: Long = 0): Long {
+    val readKey = bindKey ?: this.bindKey
+
+    if (itemData == null || readKey == null) {
+      return unbindReplace
+    }
+    return itemData.longReader().loadInstance().get(readKey) ?: unbindReplace
+  }
+
+  /**
+   * Returns bind float.
+   *
+   * @param itemData item data.
+   * @param bindKey bind key.
+   * @param unbindReplace unbind replace value for which itemData is null or bindKey not set.
+   */
+  protected fun getBindFloat(itemData: ItemData?, bindKey: String? = null, unbindReplace: Float = 0F): Float {
+    val readKey = bindKey ?: this.bindKey
+
+    if (itemData == null || readKey == null) {
+      return unbindReplace
+    }
+    return itemData.floatReader().loadInstance().get(readKey) ?: unbindReplace
+  }
+
+  /**
+   * Returns bind double.
+   *
+   * @param itemData item data.
+   * @param bindKey bind key.
+   * @param unbindReplace unbind replace value for which itemData is null or bindKey not set.
+   */
+  protected fun getBindDouble(itemData: ItemData?, bindKey: String? = null, unbindReplace: Double = 0.0): Double {
+    val readKey = bindKey ?: this.bindKey
+
+    if (itemData == null || readKey == null) {
+      return unbindReplace
+    }
+    return itemData.doubleReader().loadInstance().get(readKey) ?: unbindReplace
+  }
+
+  /**
+   * Returns bind boolean.
+   *
+   * @param itemData item data.
+   * @param bindKey bind key.
+   * @param unbindReplace unbind replace value for which itemData is null or bindKey not set.
+   */
+  protected fun getBindBoolean(itemData: ItemData?, bindKey: String? = null, unbindReplace: Boolean = false): Boolean {
+    val readKey = bindKey ?: this.bindKey
+
+    if (itemData == null || readKey == null) {
+      return unbindReplace
+    }
+    return itemData.booleanReader().loadInstance().get(readKey) ?: unbindReplace
   }
 
   /* LayoutParams */
