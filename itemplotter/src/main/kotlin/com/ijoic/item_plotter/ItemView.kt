@@ -114,4 +114,11 @@ class ItemView(context: Context, attrs: AttributeSet? = null): View(context, att
       plotter?.draw(0, 0, itemData, canvas)
     }
   }
+
+  override fun onDetachedFromWindow() {
+    super.onDetachedFromWindow()
+    plotter = null
+    itemData = null
+    itemClickListener = null
+  }
 }
