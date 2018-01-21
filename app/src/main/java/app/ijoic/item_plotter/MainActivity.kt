@@ -30,13 +30,15 @@ class MainActivity : AppCompatActivity() {
         setPlotterId(R.id.user_name)
         setTouchEnabled(true)
 
-        gravity = Gravity.CENTER
-        offsetX = 20
-        offsetY = 20
         text = "Hello World"
-        textColor = 0xFF333333.toInt()
+        textStyle.apply {
+          gravity = Gravity.CENTER
+          offsetX = 20
+          offsetY = 20
+          textColor = 0xFF333333.toInt()
+          textSize = 48F
+        }
         backgroundColor = 0xFFF5F5F5.toInt()
-        textSize = 48F
       },
       LinearLayout.LayoutParams(
         0,
@@ -49,13 +51,15 @@ class MainActivity : AppCompatActivity() {
         setPlotterId(R.id.test_hello_world)
         setTouchEnabled(true)
 
-        gravity = Gravity.END or Gravity.BOTTOM
-        offsetX = 20
-        offsetY = 20
         text = "Hello World"
-        textColor = 0xFF333333.toInt()
+        textStyle.apply {
+          gravity = Gravity.END or Gravity.BOTTOM
+          offsetX = 20
+          offsetY = 20
+          textColor = 0xFF333333.toInt()
+          textSize = 48F
+        }
         backgroundColor = 0xffd0d0d0.toInt()
-        textSize = 48F
       },
       LinearLayout.LayoutParams(
           0,
