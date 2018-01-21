@@ -51,20 +51,20 @@ object RenderUtils {
     paint.getTextBounds(text, 0, text.length, measureRect)
 
     val textInitLeft = -measureRect.left + bound.left
-    val textInitTop = -measureRect.top + bound.top
+    val textInitTop = -measureRect.bottom + bound.top
     val textWidth = measureRect.width()
     val textHeight = measureRect.height()
     RectPool.release(measureRect)
 
     val drawLeft = when {
-      containsFlag(gravity, Gravity.CENTER_HORIZONTAL) -> textInitLeft + ((bound.width().toFloat() - textWidth.toFloat() + 0.5F).toInt() shr 1)
+      isCenterHorizontal(gravity) -> textInitLeft + ((bound.width().toFloat() - textWidth.toFloat() + 0.5F).toInt() shr 1)
       containsFlag(gravity, Gravity.END) -> textInitLeft + bound.width() - textWidth - offsetX
       else -> textInitLeft + offsetX
     }
     val drawBottom = when {
-      containsFlag(gravity, Gravity.CENTER_VERTICAL) -> textInitTop + ((bound.height().toFloat() - textHeight.toFloat() + 0.5F).toInt() shr 1)
-      containsFlag(gravity, Gravity.BOTTOM) -> textInitLeft + bound.height() - offsetY
-      else -> textInitLeft + textHeight + offsetY
+      isCenterVertical(gravity) -> textInitTop + ((bound.height().toFloat() + textHeight.toFloat() + 0.5F).toInt() shr 1)
+      containsFlag(gravity, Gravity.BOTTOM) -> textInitTop + bound.height() - offsetY
+      else -> textInitTop + textHeight + offsetY
     }
 
     canvas.drawText(text, drawLeft.toFloat(), drawBottom.toFloat(), paint)
@@ -77,4 +77,18 @@ object RenderUtils {
    * @param flag flag.
    */
   private fun containsFlag(src: Int, flag: Int) = (src and flag) == flag
+
+  /**
+   * Returns center horizontal status.
+   *
+   * @param gravity gravity.
+   */
+  private fun isCenterHorizontal(gravity: Int) = (gravity and Gravity.HORIZONTAL_GRAVITY_MASK) == Gravity.CENTER_HORIZONTAL
+
+  /**
+   * Returns center vertical status.
+   *
+   * @param gravity gravity.
+   */
+  private fun isCenterVertical(gravity: Int) = (gravity and Gravity.VERTICAL_GRAVITY_MASK) == Gravity.CENTER_VERTICAL
 }
