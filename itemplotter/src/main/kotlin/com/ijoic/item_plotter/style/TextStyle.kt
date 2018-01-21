@@ -18,7 +18,6 @@
 package com.ijoic.item_plotter.style
 
 import android.graphics.*
-import android.view.Gravity
 import com.ijoic.item_plotter.util.PaintPool
 import com.ijoic.item_plotter.util.RectPool
 import com.ijoic.item_plotter.util.StyleUtils
@@ -65,44 +64,28 @@ class TextStyle: BaseStyle() {
 
     // draw text.
     if (textColor !=  Color.TRANSPARENT) {
-      drawTextWithDetail(bound, canvas, text, textPaint, gravity, offsetX, offsetY)
+      val measureRect = RectPool.obtain()
+      textPaint.textAlign = Paint.Align.LEFT
+      textPaint.getTextBounds(text, 0, text.length, measureRect)
+
+      val textInitLeft = -measureRect.left + bound.left
+      val textInitTop = -measureRect.bottom + bound.top
+      val textWidth = measureRect.width()
+      val textHeight = measureRect.height()
+      RectPool.release(measureRect)
+
+      val blockRect = RectPool.obtain()
+      StyleUtils.measureBlockRect(bound, this, textWidth, textHeight, blockRect)
+
+      val textLeft = textInitLeft + blockRect.left
+      val textBottom = textInitTop + blockRect.bottom
+      RectPool.release(blockRect)
+
+      canvas.drawText(text, textLeft.toFloat(), textBottom.toFloat(), textPaint)
     }
     if (paint == null) {
       PaintPool.release(textPaint)
     }
-  }
-  /**
-   * Draw text.
-   *
-   * <p>Draw text content according to gravity and x, y offset.</p>
-   *
-   * @param bound bound.
-   * @param canvas canvas.
-   * @param text text.
-   * @param paint paint.
-   * @param gravity gravity.
-   * @param offsetX offset x.
-   * @param offsetY offset y.
-   */
-  private fun drawTextWithDetail(bound: Rect, canvas: Canvas, text: String, paint: Paint, gravity: Int = Gravity.CENTER, offsetX: Int = 0, offsetY: Int = 0) {
-    val measureRect = RectPool.obtain()
-    paint.textAlign = Paint.Align.LEFT
-    paint.getTextBounds(text, 0, text.length, measureRect)
-
-    val textInitLeft = -measureRect.left + bound.left
-    val textInitTop = -measureRect.bottom + bound.top
-    val textWidth = measureRect.width()
-    val textHeight = measureRect.height()
-    RectPool.release(measureRect)
-
-    val blockRect = RectPool.obtain()
-    StyleUtils.measureBlockRect(bound, this, textWidth, textHeight, blockRect)
-
-    val textLeft = textInitLeft + blockRect.left
-    val textBottom = textInitTop + blockRect.bottom
-    RectPool.release(blockRect)
-
-    canvas.drawText(text, textLeft.toFloat(), textBottom.toFloat(), paint)
   }
 
 }
