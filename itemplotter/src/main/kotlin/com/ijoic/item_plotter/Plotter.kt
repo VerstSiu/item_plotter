@@ -64,13 +64,25 @@ interface Plotter {
   /* Resource */
 
   /**
-   * Prepare resource.
+   * Check resources changed.
    *
-   * <p>Returns true if resources(config) changed.</p>
+   * @param context context.
+   */
+  fun checkResChanged(context: Context): Boolean
+
+  /**
+   * Prepare resource.
    *
    * @param context context.
    */
   fun prepareResource(context: Context): Boolean
+
+  /**
+   * Prepare resource when res changed.
+   *
+   * @param context context.
+   */
+  fun onPrepareResource(context: Context)
 
   /* Measure */
 

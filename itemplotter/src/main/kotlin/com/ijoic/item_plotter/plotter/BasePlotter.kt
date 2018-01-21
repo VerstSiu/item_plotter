@@ -82,7 +82,26 @@ abstract class BasePlotter: Plotter {
 
   /* Resources */
 
-  override fun prepareResource(context: Context) = false
+  private var firstInit = false
+
+  override fun prepareResource(context: Context): Boolean {
+    if (checkResChanged(context)) {
+      onPrepareResource(context)
+      return true
+    }
+    return false
+  }
+
+  override fun checkResChanged(context: Context) = !firstInit
+
+  /**
+   * Prepare resource when res changed.
+   *
+   * @param context context.
+   */
+  override fun onPrepareResource(context: Context) {
+    firstInit = true
+  }
 
   /* Measure */
 
