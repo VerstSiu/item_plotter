@@ -20,7 +20,6 @@ package com.ijoic.item_plotter.plotter
 import android.graphics.*
 import com.ijoic.item_plotter.ItemData
 import com.ijoic.item_plotter.style.TextStyle
-import com.ijoic.item_plotter.util.RenderUtils
 
 /**
  * Text plotter.
@@ -41,12 +40,8 @@ open class TextPlotter: BasePlotter() {
 
   /* Draw */
 
-  private val paint: Paint = RenderUtils.newTextPaint()
-
   override fun onDraw(bound: Rect, itemData: ItemData?, canvas: Canvas) {
     super.onDraw(bound, itemData, canvas)
-    val text = getBindString(itemData, this.text)
-
-    textStyle.drawText(bound, canvas, paint, text)
+    textStyle.drawText(bound, canvas, getBindString(itemData, this.text))
   }
 }

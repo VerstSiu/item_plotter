@@ -274,7 +274,7 @@ abstract class BasePlotter: Plotter {
    */
   var backgroundColor: Int = Color.TRANSPARENT
 
-  override fun draw(left: Int, top: Int, itemData: ItemData?, canvas: Canvas) {
+  override fun draw(left: Int, top: Int, canvas: Canvas, itemData: ItemData?) {
     val width = getMeasuredWidth()
     val height = getMeasuredHeight()
 
@@ -287,7 +287,7 @@ abstract class BasePlotter: Plotter {
 
     val restoreCount = canvas.save()
     if (canvas.clipRect(bound)) {
-      onDraw(bound, itemData, canvas)
+      onDraw(bound, canvas, itemData)
     }
     RectPool.release(bound)
     canvas.restoreToCount(restoreCount)
@@ -300,7 +300,7 @@ abstract class BasePlotter: Plotter {
    * @param itemData item data.
    * @param canvas canvas.
    */
-  protected open fun onDraw(bound: Rect, itemData: ItemData?, canvas: Canvas) {
+  protected open fun onDraw(bound: Rect, canvas: Canvas, itemData: ItemData?) {
     // draw background.
     if (backgroundColor != Color.TRANSPARENT) {
       canvas.drawColor(backgroundColor)

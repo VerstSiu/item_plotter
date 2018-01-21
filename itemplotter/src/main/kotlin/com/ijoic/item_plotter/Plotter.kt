@@ -178,8 +178,10 @@ interface Plotter {
   /**
    * Draw plotter content.
    *
-   * @param itemData item data.
+   * @param left left position.
+   * @param top top position.
    * @param canvas canvas.
+   * @param itemData item data.
    */
-  fun draw(left: Int, top: Int, itemData: ItemData?, canvas: Canvas)
+  fun draw(left: Int, top: Int, canvas: Canvas, itemData: ItemData?)
 }

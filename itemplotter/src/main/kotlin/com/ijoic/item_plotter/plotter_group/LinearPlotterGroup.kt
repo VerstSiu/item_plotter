@@ -199,8 +199,8 @@ open class LinearPlotterGroup(orientation: Int = HORIZONTAL): BasePlotterGroup<L
 
   /* Draw */
 
-  override fun onDraw(bound: Rect, itemData: ItemData?, canvas: Canvas) {
-    super.onDraw(bound, itemData, canvas)
+  override fun onDraw(bound: Rect, canvas: Canvas, itemData: ItemData?) {
+    super.onDraw(bound, canvas, itemData)
     val left = bound.left
     val top = bound.top
     val plotterItems = getPlotterItems()
@@ -209,7 +209,7 @@ open class LinearPlotterGroup(orientation: Int = HORIZONTAL): BasePlotterGroup<L
       var drawLeft = left
 
       plotterItems.forEach {
-        it.draw(drawLeft, top, itemData, canvas)
+        it.draw(drawLeft, top, canvas, itemData)
         drawLeft += it.getMeasuredWidth()
       }
 
@@ -217,7 +217,7 @@ open class LinearPlotterGroup(orientation: Int = HORIZONTAL): BasePlotterGroup<L
       var drawTop = top
 
       plotterItems.forEach {
-        it.draw(left, drawTop, itemData, canvas)
+        it.draw(left, drawTop, canvas, itemData)
         drawTop += it.getMeasuredHeight()
       }
     }

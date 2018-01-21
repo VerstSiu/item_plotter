@@ -132,7 +132,7 @@ open class ItemView(context: Context, attrs: AttributeSet? = null): View(context
     super.onDraw(canvas)
 
     if (canvas != null) {
-      plotter?.draw(0, 0, itemData, canvas)
+      plotter?.draw(0, 0, canvas, itemData)
     }
   }
 }

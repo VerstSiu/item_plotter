@@ -19,6 +19,7 @@ package com.ijoic.item_plotter.style
 
 import android.graphics.*
 import android.view.Gravity
+import com.ijoic.item_plotter.util.PaintPool
 import com.ijoic.item_plotter.util.RectPool
 
 /**
@@ -68,20 +69,24 @@ class TextStyle {
    *
    * @param bound bound.
    * @param canvas canvas.
-   * @param paint text paint.
    * @param text text.
+   * @param paint text paint.
    */
-  fun drawText(bound: Rect, canvas: Canvas, paint: Paint, text: String?) {
+  fun drawText(bound: Rect, canvas: Canvas, text: String?, paint: Paint? = null) {
     if (text == null || text.isEmpty()) {
       return
     }
-    paint.color = textColor
-    paint.textSize = textSize
-    paint.typeface = typeface
+    val textPaint = paint ?: PaintPool.obtainTextPaint()
+    textPaint.color = textColor
+    textPaint.textSize = textSize
+    textPaint.typeface = typeface
 
     // draw text.
     if (textColor !=  Color.TRANSPARENT) {
-      drawTextWithDetail(bound, canvas, paint, text, gravity, offsetX, offsetY)
+      drawTextWithDetail(bound, canvas, text, textPaint, gravity, offsetX, offsetY)
+    }
+    if (paint == null) {
+      PaintPool.release(textPaint)
     }
   }
 
@@ -93,13 +98,13 @@ class TextStyle {
      *
      * @param bound bound.
      * @param canvas canvas.
-     * @param paint paint.
      * @param text text.
+     * @param paint paint.
      * @param gravity gravity.
      * @param offsetX offset x.
      * @param offsetY offset y.
      */
-    private fun drawTextWithDetail(bound: Rect, canvas: Canvas, paint: Paint, text: String, gravity: Int = Gravity.CENTER, offsetX: Int = 0, offsetY: Int = 0) {
+    private fun drawTextWithDetail(bound: Rect, canvas: Canvas, text: String, paint: Paint, gravity: Int = Gravity.CENTER, offsetX: Int = 0, offsetY: Int = 0) {
       val measureRect = RectPool.obtain()
       paint.textAlign = Paint.Align.LEFT
       paint.getTextBounds(text, 0, text.length, measureRect)
