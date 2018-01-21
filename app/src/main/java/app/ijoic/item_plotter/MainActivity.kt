@@ -2,6 +2,7 @@ package app.ijoic.item_plotter
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
 import app.ijoic.item_plotter.entity.User
@@ -32,9 +33,12 @@ class MainActivity : AppCompatActivity() {
         textColor = 0xFF333333.toInt()
         backgroundColor = 0xFFF5F5F5.toInt()
         textSize = 48F
-      }, LinearLayout.LayoutParams(0, 200).apply {
-        weight = 1F
-      })
+      },
+      LinearLayout.LayoutParams(
+        0,
+        ViewGroup.LayoutParams.MATCH_PARENT,
+        1F
+      ))
 
       addPlotter(TextPlotter().apply {
         setBindKey("user_age")
@@ -45,9 +49,12 @@ class MainActivity : AppCompatActivity() {
         textColor = 0xFF333333.toInt()
         backgroundColor = 0xffd0d0d0.toInt()
         textSize = 48F
-      }, LinearLayout.LayoutParams(0, 200).apply {
-        weight = 2F
-      })
+      },
+      LinearLayout.LayoutParams(
+          0,
+          ViewGroup.LayoutParams.MATCH_PARENT,
+          1F
+      ))
     }
 
     // Test bind data.

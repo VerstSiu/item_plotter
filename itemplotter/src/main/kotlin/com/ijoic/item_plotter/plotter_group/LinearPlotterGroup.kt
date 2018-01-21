@@ -100,6 +100,7 @@ open class LinearPlotterGroup(orientation: Int = HORIZONTAL): BasePlotterGroup<L
 
         if (childParamWidth == 0 && childWeight > 0) {
           childWeightWidth = (weightWidthTotal * childWeight / weightTotal).toInt()
+          totalWidth += childWeightWidth
 
           it.measure(resChanged, widthMeasureSpec, heightMeasureSpec)
           it.setMeasureDimension(childWeightWidth, it.getMeasuredHeight())
@@ -150,6 +151,7 @@ open class LinearPlotterGroup(orientation: Int = HORIZONTAL): BasePlotterGroup<L
 
         if (childParamHeight == 0 && childWeight > 0) {
           childWeightHeight = (weightHeightTotal * childWeight / weightTotal).toInt()
+          totalHeight += childWeightHeight
 
           it.measure(resChanged, widthMeasureSpec, heightMeasureSpec)
           it.setMeasureDimension(it.getMeasuredWidth(), childWeightHeight)
