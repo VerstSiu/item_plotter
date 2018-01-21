@@ -13,8 +13,8 @@ class StatePool: StateItem {
   /**
    * Returns new config state.
    */
-  fun<T> newConfigState(): ConfigState<T> {
-    val stateItem = ConfigState<T>()
+  fun<VALUE> newConfigState(defaultValue: VALUE): ConfigState<VALUE> {
+    val stateItem = ConfigState<VALUE>(defaultValue)
     stateList.add(stateItem)
     return stateItem
   }

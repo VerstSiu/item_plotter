@@ -6,7 +6,8 @@ package com.ijoic.item_plotter.config
  * @author xiao.yl on 2018/1/21.
  * @version 1.0
  */
-class ConfigState<VALUE>: StateItem {
+class ConfigState<VALUE>(
+    private val defaultValue: VALUE): StateItem {
 
   private var stateInit = false
   private var oldValue: VALUE? = null
@@ -35,18 +36,9 @@ class ConfigState<VALUE>: StateItem {
 
   /**
    * Returns current config value, or default value if config value is not found.
-   *
-   * @param defaultValue default value.
    */
-  fun getValue(defaultValue: VALUE): VALUE {
+  fun getValue(): VALUE {
     return newValue ?: defaultValue
-  }
-
-  /**
-   * Returns current config value, event if config value is not initialized.
-   */
-  fun getValueIfPresent(): VALUE? {
-    return newValue
   }
 
   override fun isChanged(): Boolean {
