@@ -30,7 +30,7 @@ import android.view.View
  * @author xiao.yl on 2018/1/20.
  * @version 1.0
  */
-class ItemView(context: Context, attrs: AttributeSet? = null): View(context, attrs) {
+open class ItemView(context: Context, attrs: AttributeSet? = null): View(context, attrs) {
 
   /**
    * Plotter provider.
@@ -61,6 +61,27 @@ class ItemView(context: Context, attrs: AttributeSet? = null): View(context, att
    * Item click listener.
    */
   var itemClickListener: OnItemClickListener? = null
+
+  /* WindowAttach */
+
+  /**
+   * Plotter Creator.
+   *
+   * <p>Use to override and provide plotter instance when item view is attached to window.
+   */
+  protected var plotterCreator: (() -> Plotter?)? = null
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    plotter = plotter ?: plotterCreator?.invoke()
+  }
+
+  override fun onDetachedFromWindow() {
+    super.onDetachedFromWindow()
+    plotter = null
+    itemData = null
+    itemClickListener = null
+  }
 
   /* Measure */
 
@@ -113,12 +134,5 @@ class ItemView(context: Context, attrs: AttributeSet? = null): View(context, att
     if (canvas != null) {
       plotter?.draw(0, 0, itemData, canvas)
     }
-  }
-
-  override fun onDetachedFromWindow() {
-    super.onDetachedFromWindow()
-    plotter = null
-    itemData = null
-    itemClickListener = null
   }
 }
