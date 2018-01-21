@@ -22,8 +22,6 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.view.Gravity
-import android.view.View
-import android.view.ViewGroup
 import com.ijoic.item_plotter.ItemData
 import com.ijoic.item_plotter.util.RectPool
 import com.ijoic.item_plotter.util.RenderUtils
@@ -81,43 +79,6 @@ open class TextPlotter: BasePlotter() {
    * Type face.
    */
   var typeface: Typeface? = null
-
-  /* Measure */
-
-  override fun measure(resChanged: Boolean, widthMeasureSpec: Int, heightMeasureSpec: Int) {
-    if (!resChanged && !isMeasureChanged(widthMeasureSpec, heightMeasureSpec)) {
-      return
-    }
-
-    // measure width.
-    val paramsWidth = getParamsWidth()
-
-    val widthMode = View.MeasureSpec.getMode(widthMeasureSpec)
-    val widthSize = View.MeasureSpec.getSize(widthMeasureSpec)
-
-    val measuredWidth = when (widthMode) {
-      View.MeasureSpec.EXACTLY -> widthSize
-      View.MeasureSpec.AT_MOST -> if (paramsWidth == ViewGroup.LayoutParams.MATCH_PARENT) widthSize else Math.max(paramsWidth, 0)
-      View.MeasureSpec.UNSPECIFIED -> Math.max(paramsWidth, 0)
-      else -> 0
-    }
-
-    // measure height.
-    val paramsHeight = getParamsHeight()
-
-    val heightMode = View.MeasureSpec.getMode(heightMeasureSpec)
-    val heightSize = View.MeasureSpec.getSize(heightMeasureSpec)
-
-    val measuredHeight = when (heightMode) {
-      View.MeasureSpec.EXACTLY -> heightSize
-      View.MeasureSpec.AT_MOST -> if (paramsWidth == ViewGroup.LayoutParams.MATCH_PARENT) heightSize else Math.max(paramsHeight, 0)
-      View.MeasureSpec.UNSPECIFIED -> Math.max(paramsHeight, 0)
-      else -> 0
-    }
-
-    // update measure dimension.
-    setMeasureDimension(measuredWidth, measuredHeight)
-  }
 
   /* Draw */
 
