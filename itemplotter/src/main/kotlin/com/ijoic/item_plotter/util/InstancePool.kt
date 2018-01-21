@@ -39,5 +39,16 @@ open class InstancePool<T> internal constructor(
   /**
    * Release item instance.
    */
-  fun release(instance: T) = innerPool.release(instance)
+  fun release(instance: T) {
+    onReleaseElement(instance)
+    innerPool.release(instance)
+  }
+
+  /**
+   * Release element.
+   *
+   * @param instance instance.
+   */
+  protected open fun onReleaseElement(instance: T) {
+  }
 }

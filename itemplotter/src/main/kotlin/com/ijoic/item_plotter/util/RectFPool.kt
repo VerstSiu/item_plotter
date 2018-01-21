@@ -25,4 +25,8 @@ import android.graphics.RectF
  * @author xiao.yl on 2018/1/20.
  * @version 1.0
  */
-object RectFPool: InstancePool<RectF>({ RectF() })
+object RectFPool: InstancePool<RectF>({ RectF() }) {
+  override fun onReleaseElement(instance: RectF) {
+    instance.setEmpty()
+  }
+}

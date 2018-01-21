@@ -25,4 +25,8 @@ import android.graphics.Rect
  * @author xiao.yl on 2018/1/20.
  * @version 1.0
  */
-object RectPool: InstancePool<Rect>({ Rect() })
+object RectPool: InstancePool<Rect>({ Rect() }) {
+  override fun onReleaseElement(instance: Rect) {
+    instance.setEmpty()
+  }
+}
