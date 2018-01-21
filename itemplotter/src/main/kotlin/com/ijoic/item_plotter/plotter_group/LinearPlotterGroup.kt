@@ -18,6 +18,7 @@
 package com.ijoic.item_plotter.plotter_group
 
 import android.graphics.Canvas
+import android.graphics.Rect
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.ijoic.item_plotter.ItemData
@@ -198,7 +199,9 @@ open class LinearPlotterGroup(orientation: Int = HORIZONTAL): BasePlotterGroup<L
 
   /* Draw */
 
-  override fun draw(left: Int, top: Int, itemData: ItemData?, canvas: Canvas) {
+  override fun onDraw(bound: Rect, itemData: ItemData?, canvas: Canvas) {
+    val left = bound.left
+    val top = bound.top
     val plotterItems = getPlotterItems()
 
     if (isHorizontal) {

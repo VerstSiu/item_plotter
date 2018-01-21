@@ -164,6 +164,15 @@ interface Plotter {
    */
   fun isTouchEnabled(): Boolean
 
+  /* FindChild */
+
+  /**
+   * Returns id bind child generation plotter if exist.
+   *
+   * @param plotterId plotter id.
+   */
+  fun getPlotterById(@IdRes plotterId: Int): Plotter?
+
   /* Draw */
 
   /**
@@ -173,13 +182,4 @@ interface Plotter {
    * @param canvas canvas.
    */
   fun draw(left: Int, top: Int, itemData: ItemData?, canvas: Canvas)
-
-  /* FindChild */
-
-  /**
-   * Returns id bind child generation plotter if exist.
-   *
-   * @param plotterId plotter id.
-   */
-  fun getPlotterById(@IdRes plotterId: Int): Plotter?
 }

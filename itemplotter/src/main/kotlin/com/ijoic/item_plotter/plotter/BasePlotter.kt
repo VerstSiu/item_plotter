@@ -18,10 +18,13 @@
 package com.ijoic.item_plotter.plotter
 
 import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Rect
 import android.view.View
 import android.view.ViewGroup
 import com.ijoic.item_plotter.ItemData
 import com.ijoic.item_plotter.Plotter
+import com.ijoic.item_plotter.util.RectPool
 
 /**
  * Base plotter.
@@ -262,5 +265,35 @@ abstract class BasePlotter: Plotter {
     }
     return null
   }
+
+  /* Draw */
+
+  override fun draw(left: Int, top: Int, itemData: ItemData?, canvas: Canvas) {
+    val width = getMeasuredWidth()
+    val height = getMeasuredHeight()
+
+    // check draw bound.
+    if (width == 0 || height == 0) {
+      return
+    }
+    val bound = RectPool.obtain()
+    bound.set(left, top, left + width, top + height)
+
+    val restoreCount = canvas.save()
+    if (canvas.clipRect(bound)) {
+      onDraw(bound, itemData, canvas)
+    }
+    RectPool.release(bound)
+    canvas.restoreToCount(restoreCount)
+  }
+
+  /**
+   * Draw while width or height is not null.
+   *
+   * @param bound bound.
+   * @param itemData item data.
+   * @param canvas canvas.
+   */
+  protected abstract fun onDraw(bound: Rect, itemData: ItemData?, canvas: Canvas)
 
 }

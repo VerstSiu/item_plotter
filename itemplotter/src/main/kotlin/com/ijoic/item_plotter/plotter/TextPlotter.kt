@@ -17,13 +17,9 @@
  */
 package com.ijoic.item_plotter.plotter
 
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Typeface
+import android.graphics.*
 import android.view.Gravity
 import com.ijoic.item_plotter.ItemData
-import com.ijoic.item_plotter.util.RectPool
 import com.ijoic.item_plotter.util.RenderUtils
 
 /**
@@ -84,17 +80,8 @@ open class TextPlotter: BasePlotter() {
 
   private val paint: Paint = Paint()
 
-  override fun draw(left: Int, top: Int, itemData: ItemData?, canvas: Canvas) {
-    val width = getMeasuredWidth()
-    val height = getMeasuredHeight()
-
-    // check draw bound.
-    if (width == 0 || height == 0) {
-      return
-    }
+  override fun onDraw(bound: Rect, itemData: ItemData?, canvas: Canvas) {
     val text = getBindString(itemData, this.text)
-    val bound = RectPool.obtain()
-    bound.set(left, top, left + width, top + height)
 
     paint.color = textColor
     paint.style = Paint.Style.FILL
@@ -102,9 +89,6 @@ open class TextPlotter: BasePlotter() {
     paint.typeface = typeface
     paint.isAntiAlias = true
     paint.isDither = true
-
-    val restoreCount = canvas.save()
-    canvas.clipRect(bound)
 
     // draw background.
     if (backgroundColor != Color.TRANSPARENT) {
@@ -115,7 +99,5 @@ open class TextPlotter: BasePlotter() {
     if (textColor !=  Color.TRANSPARENT) {
       RenderUtils.drawText(canvas, paint, text, bound, gravity, offsetX, offsetY)
     }
-    RectPool.release(bound)
-    canvas.restoreToCount(restoreCount)
   }
 }
