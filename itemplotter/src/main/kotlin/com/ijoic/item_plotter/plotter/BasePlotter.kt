@@ -26,6 +26,7 @@ import android.view.ViewGroup
 import com.ijoic.item_plotter.ItemData
 import com.ijoic.item_plotter.Plotter
 import com.ijoic.item_plotter.util.RectPool
+import com.ijoic.item_plotter.util.StyleUtils
 
 /**
  * Base plotter.
@@ -277,20 +278,13 @@ abstract class BasePlotter: Plotter {
   override fun draw(left: Int, top: Int, canvas: Canvas, itemData: ItemData?) {
     val width = getMeasuredWidth()
     val height = getMeasuredHeight()
-
-    // check draw bound.
-    if (width == 0 || height == 0) {
-      return
-    }
     val bound = RectPool.obtain()
     bound.set(left, top, left + width, top + height)
 
-    val restoreCount = canvas.save()
-    if (canvas.clipRect(bound)) {
+    StyleUtils.drawWithClipRect(bound, canvas, {
       onDraw(bound, canvas, itemData)
-    }
+    })
     RectPool.release(bound)
-    canvas.restoreToCount(restoreCount)
   }
 
   /**

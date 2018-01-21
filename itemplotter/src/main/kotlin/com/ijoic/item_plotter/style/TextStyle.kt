@@ -21,6 +21,7 @@ import android.graphics.*
 import android.view.Gravity
 import com.ijoic.item_plotter.util.PaintPool
 import com.ijoic.item_plotter.util.RectPool
+import com.ijoic.item_plotter.util.StyleUtils
 
 /**
  * Text style.
@@ -28,7 +29,7 @@ import com.ijoic.item_plotter.util.RectPool
  * @author xiao.yl on 2018/1/21.
  * @version 1.0
  */
-class TextStyle {
+class TextStyle: BaseStyle() {
 
   /**
    * Text color.
@@ -39,25 +40,6 @@ class TextStyle {
    * Text size.
    */
   var textSize: Float = 24F
-
-  /**
-   * Gravity.
-   */
-  var gravity: Int = Gravity.CENTER
-
-  /**
-   * Offset x.
-   *
-   * <p>Used only when gravity is not CENTER_HORIZONTAL.</p>
-   */
-  var offsetX: Int = 0
-
-  /**
-   * Offset y.
-   *
-   * <p>Used only when gravity is not CENTER_VERTICAL.</p>
-   */
-  var offsetY: Int = 0
 
   /**
    * Type face.
@@ -89,67 +71,38 @@ class TextStyle {
       PaintPool.release(textPaint)
     }
   }
+  /**
+   * Draw text.
+   *
+   * <p>Draw text content according to gravity and x, y offset.</p>
+   *
+   * @param bound bound.
+   * @param canvas canvas.
+   * @param text text.
+   * @param paint paint.
+   * @param gravity gravity.
+   * @param offsetX offset x.
+   * @param offsetY offset y.
+   */
+  private fun drawTextWithDetail(bound: Rect, canvas: Canvas, text: String, paint: Paint, gravity: Int = Gravity.CENTER, offsetX: Int = 0, offsetY: Int = 0) {
+    val measureRect = RectPool.obtain()
+    paint.textAlign = Paint.Align.LEFT
+    paint.getTextBounds(text, 0, text.length, measureRect)
 
-  companion object {
-    /**
-     * Draw text.
-     *
-     * <p>Draw text content according to gravity and x, y offset.</p>
-     *
-     * @param bound bound.
-     * @param canvas canvas.
-     * @param text text.
-     * @param paint paint.
-     * @param gravity gravity.
-     * @param offsetX offset x.
-     * @param offsetY offset y.
-     */
-    private fun drawTextWithDetail(bound: Rect, canvas: Canvas, text: String, paint: Paint, gravity: Int = Gravity.CENTER, offsetX: Int = 0, offsetY: Int = 0) {
-      val measureRect = RectPool.obtain()
-      paint.textAlign = Paint.Align.LEFT
-      paint.getTextBounds(text, 0, text.length, measureRect)
+    val textInitLeft = -measureRect.left + bound.left
+    val textInitTop = -measureRect.bottom + bound.top
+    val textWidth = measureRect.width()
+    val textHeight = measureRect.height()
+    RectPool.release(measureRect)
 
-      val textInitLeft = -measureRect.left + bound.left
-      val textInitTop = -measureRect.bottom + bound.top
-      val textWidth = measureRect.width()
-      val textHeight = measureRect.height()
-      RectPool.release(measureRect)
+    val blockRect = RectPool.obtain()
+    StyleUtils.measureBlockRect(bound, this, textWidth, textHeight, blockRect)
 
-      val drawLeft = when {
-        isCenterHorizontal(gravity) -> textInitLeft + ((bound.width().toFloat() - textWidth.toFloat() + 0.5F).toInt() shr 1)
-        containsFlag(gravity, Gravity.END) -> textInitLeft + bound.width() - textWidth - offsetX
-        else -> textInitLeft + offsetX
-      }
-      val drawBottom = when {
-        isCenterVertical(gravity) -> textInitTop + ((bound.height().toFloat() + textHeight.toFloat() + 0.5F).toInt() shr 1)
-        containsFlag(gravity, Gravity.BOTTOM) -> textInitTop + bound.height() - offsetY
-        else -> textInitTop + textHeight + offsetY
-      }
+    val textLeft = textInitLeft + blockRect.left
+    val textBottom = textInitTop + blockRect.bottom
+    RectPool.release(blockRect)
 
-      canvas.drawText(text, drawLeft.toFloat(), drawBottom.toFloat(), paint)
-    }
-
-    /**
-     * Returns binary flag contains status.
-     *
-     * @param src flag set.
-     * @param flag flag.
-     */
-    private fun containsFlag(src: Int, flag: Int) = (src and flag) == flag
-
-    /**
-     * Returns center horizontal status.
-     *
-     * @param gravity gravity.
-     */
-    private fun isCenterHorizontal(gravity: Int) = (gravity and Gravity.HORIZONTAL_GRAVITY_MASK) == Gravity.CENTER_HORIZONTAL
-
-    /**
-     * Returns center vertical status.
-     *
-     * @param gravity gravity.
-     */
-    private fun isCenterVertical(gravity: Int) = (gravity and Gravity.VERTICAL_GRAVITY_MASK) == Gravity.CENTER_VERTICAL
+    canvas.drawText(text, textLeft.toFloat(), textBottom.toFloat(), paint)
   }
 
 }
