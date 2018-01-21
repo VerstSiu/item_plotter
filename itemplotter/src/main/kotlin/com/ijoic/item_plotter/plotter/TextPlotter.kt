@@ -40,8 +40,8 @@ open class TextPlotter: BasePlotter() {
 
   /* Draw */
 
-  override fun onDraw(bound: Rect, itemData: ItemData?, canvas: Canvas) {
-    super.onDraw(bound, itemData, canvas)
+  override fun onDraw(bound: Rect, canvas: Canvas, itemData: ItemData?) {
+    super.onDraw(bound, canvas, itemData)
     textStyle.drawText(bound, canvas, getBindString(itemData, this.text))
   }
 }
