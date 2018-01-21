@@ -53,7 +53,7 @@ abstract class BasePlotter: Plotter {
     if (itemData == null || bindKey == null) {
       return unbindReplace
     }
-    return itemData.getString(bindKey)
+    return itemData.stringReader().get(bindKey)
   }
 
   /* LayoutParams */

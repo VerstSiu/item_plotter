@@ -17,6 +17,8 @@
  */
 package com.ijoic.item_plotter
 
+import com.ijoic.item_plotter.value.ValueReader
+
 /**
  * Item data.
  *
@@ -25,9 +27,7 @@ package com.ijoic.item_plotter
  */
 interface ItemData {
   /**
-   * Returns string value.
-   *
-   * @param bindKey bind key.
+   * String reader.
    */
-  fun getString(bindKey: String): String?
+  fun stringReader(): ValueReader<String>
 }

@@ -24,6 +24,12 @@ utils:
 * [RectPool](RectPool.md)
 * [RenderUtils](RenderUtils.md)
 
+value:
+
+* [ValueReader](ValueReader.md)
+* [SimpleReader](SimpleReader.md)
+* [TransformReader](TransformReader.md)
+
 base:
 
 * [ItemData](ItemData.md)

@@ -18,7 +18,7 @@
 package com.ijoic.item_plotter.data
 
 import com.ijoic.item_plotter.ItemData
-import java.util.concurrent.ConcurrentHashMap
+import com.ijoic.item_plotter.value.TransformReader
 
 /**
  * Transform item data.
@@ -26,31 +26,19 @@ import java.util.concurrent.ConcurrentHashMap
  * @author xiao.yl on 2018/1/20.
  * @version 1.0
  */
-class TransformItemData<T>: ItemData {
+class TransformItemData<ITEM>: ItemData {
+  private val providerItem: () -> ITEM? = { item }
 
   /**
    * Item.
    */
-  var item: T? = null
-
-  /* Transform */
-
-  private val transformMap = ConcurrentHashMap<String, ((T) -> String?)>()
+  var item: ITEM? = null
 
   /**
-   * Register transform.
-   *
-   * @param bindKey bind key.
-   * @param transform transform.
+   * String reader impl.
    */
-  fun registerStringTransform(bindKey: String, transform: (T) -> String?) {
-    transformMap[bindKey] = transform
-  }
+  val stringReaderImpl = TransformReader<ITEM, String>(providerItem)
 
-  override fun getString(bindKey: String): String? {
-    val transform = transformMap[bindKey] ?: return null
-    val item = this.item ?: return null
+  override fun stringReader() = stringReaderImpl
 
-    return transform(item)
-  }
 }

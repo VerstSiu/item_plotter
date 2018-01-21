@@ -15,24 +15,33 @@
  *  limitations under the License.
  *
  */
-package com.ijoic.item_plotter.data
+package com.ijoic.item_plotter.value
 
-import com.ijoic.item_plotter.ItemData
-import com.ijoic.item_plotter.value.SimpleReader
+import java.util.concurrent.ConcurrentHashMap
 
 /**
- * Simple item data.
+ * Simple value reader.
  *
- * @author xiao.yl on 2018/1/20.
+ * @author xiao.yl on 2018/1/21.
  * @version 1.0
  */
-class SimpleItemData: ItemData {
+class SimpleReader<VALUE>: ValueReader<VALUE> {
+
+  private val valueMap = ConcurrentHashMap<String, VALUE>()
+
+  override fun get(bindKey: String): VALUE? = valueMap[bindKey]
 
   /**
-   * String reader impl.
+   * Put value.
+   *
+   * @param bindKey bind key.
+   * @param value value.
    */
-  val stringReaderImpl = SimpleReader<String>()
-
-  override fun stringReader() = stringReaderImpl
-
+  fun putValue(bindKey: String, value: VALUE?) {
+    if (value == null) {
+      valueMap.remove(bindKey)
+    } else {
+      valueMap[bindKey] = value
+    }
+  }
 }

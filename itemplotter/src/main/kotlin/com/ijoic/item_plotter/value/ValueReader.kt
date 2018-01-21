@@ -15,24 +15,19 @@
  *  limitations under the License.
  *
  */
-package com.ijoic.item_plotter.data
-
-import com.ijoic.item_plotter.ItemData
-import com.ijoic.item_plotter.value.SimpleReader
+package com.ijoic.item_plotter.value
 
 /**
- * Simple item data.
+ * Value reader.
  *
- * @author xiao.yl on 2018/1/20.
+ * @author xiao.yl on 2018/1/21.
  * @version 1.0
  */
-class SimpleItemData: ItemData {
-
+interface ValueReader<out VALUE> {
   /**
-   * String reader impl.
+   * Get value.
+   *
+   * @param bindKey bind key.
    */
-  val stringReaderImpl = SimpleReader<String>()
-
-  override fun stringReader() = stringReaderImpl
-
+  fun get(bindKey: String): VALUE?
 }
