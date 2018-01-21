@@ -29,6 +29,20 @@ import android.view.Gravity
  * @version 1.0
  */
 object RenderUtils {
+
+  /* Paint */
+
+  /**
+   * Returns new text paint instance.
+   */
+  fun newTextPaint() = Paint().apply {
+    style = Paint.Style.FILL
+    isDither = true
+    isAntiAlias = true
+  }
+
+  /* DrawText */
+
   /**
    * Draw text.
    *

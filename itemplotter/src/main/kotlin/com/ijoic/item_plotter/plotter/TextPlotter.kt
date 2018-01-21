@@ -43,11 +43,6 @@ open class TextPlotter: BasePlotter() {
   var textColor: Int = Color.BLACK
 
   /**
-   * Background color.
-   */
-  var backgroundColor: Int = Color.TRANSPARENT
-
-  /**
    * Text size.
    */
   var textSize: Float = 24F
@@ -78,22 +73,15 @@ open class TextPlotter: BasePlotter() {
 
   /* Draw */
 
-  private val paint: Paint = Paint()
+  private val paint: Paint = RenderUtils.newTextPaint()
 
   override fun onDraw(bound: Rect, itemData: ItemData?, canvas: Canvas) {
+    super.onDraw(bound, itemData, canvas)
     val text = getBindString(itemData, this.text)
 
     paint.color = textColor
-    paint.style = Paint.Style.FILL
     paint.textSize = textSize
     paint.typeface = typeface
-    paint.isAntiAlias = true
-    paint.isDither = true
-
-    // draw background.
-    if (backgroundColor != Color.TRANSPARENT) {
-      canvas.drawColor(backgroundColor)
-    }
 
     // draw text.
     if (textColor !=  Color.TRANSPARENT) {

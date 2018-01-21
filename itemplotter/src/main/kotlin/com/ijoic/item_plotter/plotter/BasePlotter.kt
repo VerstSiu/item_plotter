@@ -19,6 +19,7 @@ package com.ijoic.item_plotter.plotter
 
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Rect
 import android.view.View
 import android.view.ViewGroup
@@ -268,6 +269,11 @@ abstract class BasePlotter: Plotter {
 
   /* Draw */
 
+  /**
+   * Background color.
+   */
+  var backgroundColor: Int = Color.TRANSPARENT
+
   override fun draw(left: Int, top: Int, itemData: ItemData?, canvas: Canvas) {
     val width = getMeasuredWidth()
     val height = getMeasuredHeight()
@@ -294,6 +300,11 @@ abstract class BasePlotter: Plotter {
    * @param itemData item data.
    * @param canvas canvas.
    */
-  protected abstract fun onDraw(bound: Rect, itemData: ItemData?, canvas: Canvas)
+  protected open fun onDraw(bound: Rect, itemData: ItemData?, canvas: Canvas) {
+    // draw background.
+    if (backgroundColor != Color.TRANSPARENT) {
+      canvas.drawColor(backgroundColor)
+    }
+  }
 
 }

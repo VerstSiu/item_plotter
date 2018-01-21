@@ -200,6 +200,7 @@ open class LinearPlotterGroup(orientation: Int = HORIZONTAL): BasePlotterGroup<L
   /* Draw */
 
   override fun onDraw(bound: Rect, itemData: ItemData?, canvas: Canvas) {
+    super.onDraw(bound, itemData, canvas)
     val left = bound.left
     val top = bound.top
     val plotterItems = getPlotterItems()
