@@ -1,5 +1,7 @@
 package com.ijoic.item_plotter.style
 
+import android.graphics.Color
+
 /**
  * Block style.
  *
@@ -16,4 +18,9 @@ class BlockStyle: BaseStyle() {
    * Height.
    */
   var height: Int = 0
+
+  /**
+   * Background color.
+   */
+  var backgroundColor: Int = Color.TRANSPARENT
 }
