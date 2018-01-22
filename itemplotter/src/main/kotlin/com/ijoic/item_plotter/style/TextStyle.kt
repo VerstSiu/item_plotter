@@ -52,8 +52,9 @@ class TextStyle: BaseStyle() {
    * @param canvas canvas.
    * @param text text.
    * @param paint text paint.
+   * @param renderAppend render append: fun(textWidth: Int, textHeight: Int).
    */
-  fun drawText(bound: Rect, canvas: Canvas, text: String?, paint: Paint? = null) {
+  fun drawText(bound: Rect, canvas: Canvas, text: String?, paint: Paint? = null, renderAppend: ((Int, Int) -> Unit)? = null) {
     if (text == null || text.isEmpty()) {
       return
     }
