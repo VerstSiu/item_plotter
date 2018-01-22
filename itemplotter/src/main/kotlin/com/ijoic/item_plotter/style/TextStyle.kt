@@ -68,8 +68,8 @@ class TextStyle: BaseStyle() {
       textPaint.textAlign = Paint.Align.LEFT
       textPaint.getTextBounds(text, 0, text.length, measureRect)
 
-      val textInitLeft = -measureRect.left + bound.left
-      val textInitTop = -measureRect.bottom + bound.top
+      val textInitLeft = -measureRect.left
+      val textInitTop = -measureRect.bottom
       val textWidth = measureRect.width()
       val textHeight = measureRect.height()
       RectPool.release(measureRect)

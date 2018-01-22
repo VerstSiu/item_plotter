@@ -1,6 +1,7 @@
 package com.ijoic.item_plotter.style
 
 import android.view.Gravity
+import com.ijoic.item_plotter.style.dimen.RoundDimen
 
 /**
  * Base style.
@@ -15,16 +16,7 @@ open class BaseStyle {
   var gravity: Int = Gravity.CENTER
 
   /**
-   * Offset x.
-   *
-   * <p>Used only when gravity is not CENTER_HORIZONTAL.</p>
+   * Margin.
    */
-  var offsetX: Int = 0
-
-  /**
-   * Offset y.
-   *
-   * <p>Used only when gravity is not CENTER_VERTICAL.</p>
-   */
-  var offsetY: Int = 0
+  val margin = RoundDimen()
 }

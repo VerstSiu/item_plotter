@@ -1,5 +1,6 @@
 package app.ijoic.item_plotter
 
+import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Gravity
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
 import app.ijoic.item_plotter.entity.User
+import app.ijoic.item_plotter.plotter.RoundRectPlotter
 import com.ijoic.item_plotter.ItemView
 import com.ijoic.item_plotter.data.TransformItemData
 import com.ijoic.item_plotter.plotter.TextPlotter
@@ -33,8 +35,6 @@ class MainActivity : AppCompatActivity() {
         text = "Hello World"
         textStyle.apply {
           gravity = Gravity.CENTER
-          offsetX = 20
-          offsetY = 20
           textColor = 0xFF333333.toInt()
           textSize = 48F
         }
@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         1F
       ))
 
-      addPlotter(TextPlotter().apply {
+      addPlotter(RoundRectPlotter().apply {
         setBindKey("user_age")
         setPlotterId(R.id.test_hello_world)
         setTouchEnabled(true)
@@ -54,12 +54,22 @@ class MainActivity : AppCompatActivity() {
         text = "Hello World"
         textStyle.apply {
           gravity = Gravity.END or Gravity.BOTTOM
-          offsetX = 20
-          offsetY = 20
+          margin.apply {
+            right = 20
+            bottom = 20
+          }
           textColor = 0xFF333333.toInt()
           textSize = 48F
         }
         backgroundColor = 0xffd0d0d0.toInt()
+
+        rectStyle.apply {
+          width = ViewGroup.LayoutParams.MATCH_PARENT
+          height = ViewGroup.LayoutParams.MATCH_PARENT
+          margin.setAll(20)
+          backgroundColor = Color.GREEN
+          radius = 20F
+        }
       },
       LinearLayout.LayoutParams(
           0,

@@ -3,6 +3,7 @@ package com.ijoic.item_plotter.util
 import android.graphics.Canvas
 import android.graphics.Rect
 import android.view.Gravity
+import android.view.ViewGroup
 import com.ijoic.item_plotter.style.BaseStyle
 import com.ijoic.item_plotter.style.BlockStyle
 
@@ -16,28 +17,58 @@ object StyleUtils {
   /**
    * Measure block rect.
    *
+   * <p>Use ViewGroup.LayoutParams.MATCH_PARENT to specify match width or height.</p>
+   *
    * @param bound bound.
    * @param style style.
    * @param width width.
    * @param height height.
    * @param outRect out rect.
+   *
+   * @see ViewGroup.LayoutParams.MATCH_PARENT
    */
   fun measureBlockRect(bound: Rect, style: BaseStyle, width: Int, height: Int, outRect: Rect) {
     val gravity = style.gravity
-    val boundLeft = bound.left
-    val boundTop = bound.top
+    val margin = style.margin
 
-    val blockLeft = when {
-      isCenterHorizontal(gravity) -> ((bound.width().toFloat() - width.toFloat() + 0.5F).toInt() shr 1)
-      containsFlag(gravity, Gravity.END) -> bound.width() - width - boundLeft
-      else -> boundLeft
+    val isMatchWidth = width == ViewGroup.LayoutParams.MATCH_PARENT
+    val realWidth = Math.max(width, 0)
+    val isMatchHeight = height == ViewGroup.LayoutParams.MATCH_PARENT
+    val realHeight = Math.max(height, 0)
+
+    // measure left and right position.
+    val blockLeft: Int
+    val blockRight: Int
+
+    if (isMatchWidth) {
+      blockLeft = bound.left + margin.left
+      blockRight = bound.right - margin.right
+    } else {
+      blockLeft = when {
+        isCenterHorizontal(gravity) -> bound.left + ((bound.width().toFloat() - realWidth.toFloat() + 0.5F).toInt() shr 1)
+        containsFlag(gravity, Gravity.END) -> bound.right - realWidth - margin.right
+        else -> bound.left + margin.left
+      }
+      blockRight = blockLeft + realWidth
     }
-    val blockBottom = when {
-      isCenterVertical(gravity) -> ((bound.height().toFloat() + height.toFloat() + 0.5F).toInt() shr 1)
-      containsFlag(gravity, Gravity.BOTTOM) -> bound.height() - boundTop
-      else -> height + boundTop
+
+    // measure top and bottom position.
+    val blockBottom: Int
+    val blockTop: Int
+
+    if (isMatchHeight) {
+      blockBottom = bound.bottom - margin.bottom
+      blockTop = bound.top + margin.top
+    } else {
+      blockBottom = when {
+        isCenterVertical(gravity) -> bound.top + ((bound.height().toFloat() + realHeight.toFloat() + 0.5F).toInt() shr 1)
+        containsFlag(gravity, Gravity.BOTTOM) -> bound.bottom - margin.bottom
+        else -> bound.top + realHeight + margin.top
+      }
+      blockTop = blockBottom - realHeight
     }
-    outRect.set(blockLeft, blockBottom - height, blockLeft + width, blockBottom)
+
+    outRect.set(blockLeft, blockTop, blockRight, blockBottom)
   }
 
   /**

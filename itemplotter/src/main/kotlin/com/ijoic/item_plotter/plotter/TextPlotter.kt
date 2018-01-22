@@ -42,6 +42,6 @@ open class TextPlotter: BasePlotter() {
 
   override fun onDraw(bound: Rect, canvas: Canvas, itemData: ItemData?) {
     super.onDraw(bound, canvas, itemData)
-    textStyle.drawText(bound, canvas, getBindString(itemData, this.text))
+    textStyle.drawText(bound, canvas, getBindString(itemData, unbindReplace = this.text))
   }
 }

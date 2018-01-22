@@ -21,4 +21,11 @@ object PaintPool : InstancePool<Paint>({ Paint() }) {
     isDither = true
     isAntiAlias = true
   }
+
+  /**
+   * Returns fill paint.
+   */
+  fun obtainFillPaint() = obtain().apply {
+    style = Paint.Style.FILL
+  }
 }
