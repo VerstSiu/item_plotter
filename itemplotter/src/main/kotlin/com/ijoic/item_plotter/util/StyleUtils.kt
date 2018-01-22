@@ -27,7 +27,7 @@ object StyleUtils {
    *
    * @see ViewGroup.LayoutParams.MATCH_PARENT
    */
-  fun measureBlockRect(bound: Rect, style: BaseStyle, width: Int, height: Int, outRect: Rect) {
+  fun measureBlock(bound: Rect, style: BaseStyle, width: Int, height: Int, outRect: Rect) {
     val gravity = style.gravity
     val margin = style.margin
 
@@ -78,8 +78,8 @@ object StyleUtils {
    * @param style style.
    * @param outRect out rect.
    */
-  fun measureBlockRect(bound: Rect, style: BlockStyle, outRect: Rect) {
-    measureBlockRect(bound, style, style.width, style.height, outRect)
+  fun measureBlock(bound: Rect, style: BlockStyle, outRect: Rect) {
+    measureBlock(bound, style, style.width, style.height, outRect)
   }
 
   /**
@@ -89,7 +89,7 @@ object StyleUtils {
    * @param canvas canvas.
    * @param renderItem render item.
    */
-  fun drawWithClipRect(bound: Rect, canvas: Canvas, renderItem: () -> Unit) {
+  fun drawAndClipBound(bound: Rect, canvas: Canvas, renderItem: () -> Unit) {
     if (bound.isEmpty) {
       return
     }

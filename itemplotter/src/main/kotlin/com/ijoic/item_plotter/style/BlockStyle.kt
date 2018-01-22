@@ -44,11 +44,11 @@ class BlockStyle: BaseStyle() {
    * @param canvas canvas.
    * @param renderItem render item: fun(blockBound: Rect).
    */
-  fun drawWithClipRect(bound: Rect, canvas: Canvas, renderItem: (Rect) -> Unit) {
+  fun drawAndClipRect(bound: Rect, canvas: Canvas, renderItem: (Rect) -> Unit) {
     val blockRect = RectPool.obtain()
-    StyleUtils.measureBlockRect(bound, this, blockRect)
+    StyleUtils.measureBlock(bound, this, blockRect)
 
-    StyleUtils.drawWithClipRect(blockRect, canvas, {
+    StyleUtils.drawAndClipBound(blockRect, canvas, {
       renderItem.invoke(blockRect)
     })
 
@@ -61,18 +61,15 @@ class BlockStyle: BaseStyle() {
    * @param bound bound.
    * @param canvas canvas.
    * @param renderItem render item: fun(blockBound: RectF).
+   * @param renderAppend render item: fun(blockBound: Rect).
    */
-  fun drawWithClipRectF(bound: Rect, canvas: Canvas, renderItem: (RectF) -> Unit) {
-    val blockRect = RectPool.obtain()
-    StyleUtils.measureBlockRect(bound, this, blockRect)
-
-    StyleUtils.drawWithClipRect(blockRect, canvas, {
-      val blockRectF = RectFPool.obtain().apply { set(blockRect) }
+  fun drawAndClipRectF(bound: Rect, canvas: Canvas, renderItem: (RectF) -> Unit, renderAppend: ((Rect) -> Unit)? = null) {
+    drawAndClipRect(bound, canvas, {
+      val blockRectF = RectFPool.obtain().apply { set(it) }
       renderItem.invoke(blockRectF)
+      renderAppend?.invoke(it)
       RectFPool.release(blockRectF)
     })
-
-    RectPool.release(blockRect)
   }
 
   /**
@@ -81,18 +78,21 @@ class BlockStyle: BaseStyle() {
    * @param bound bound.
    * @param canvas canvas.
    * @param paint text paint.
+   * @param renderAppend render item: fun(blockBound: Rect).
    */
-  fun drawColor(bound: Rect, canvas: Canvas, paint: Paint? = null) {
+  fun drawColor(bound: Rect, canvas: Canvas, paint: Paint? = null, renderAppend: ((Rect) -> Unit)? = null) {
     if (paint == null) {
-      drawWithClipRect(bound, canvas, {
+      drawAndClipRect(bound, canvas, {
         canvas.drawColor(backgroundColor)
+        renderAppend?.invoke(it)
       })
 
     } else {
       paint.color = backgroundColor
 
-      drawWithClipRect(bound, canvas, {
+      drawAndClipRect(bound, canvas, {
         canvas.drawRect(it, paint)
+        renderAppend?.invoke(it)
       })
     }
   }
@@ -103,14 +103,16 @@ class BlockStyle: BaseStyle() {
    * @param bound bound.
    * @param canvas canvas.
    * @param paint text paint.
+   * @param renderAppend render item: fun(blockBound: Rect).
    */
-  fun drawRoundRect(bound: Rect, canvas: Canvas, paint: Paint? = null) {
+  fun drawRoundRect(bound: Rect, canvas: Canvas, paint: Paint? = null, renderAppend: ((Rect) -> Unit)? = null) {
     val colorPaint = paint ?: PaintPool.obtainFillPaint()
     colorPaint.color = backgroundColor
 
-    drawWithClipRectF(bound, canvas, {
+    drawAndClipRectF(bound, canvas, {
       canvas.drawRoundRect(it, radius, radius, colorPaint)
-    })
+    }, renderAppend = renderAppend)
+
     if (paint == null) {
       PaintPool.release(colorPaint)
     }

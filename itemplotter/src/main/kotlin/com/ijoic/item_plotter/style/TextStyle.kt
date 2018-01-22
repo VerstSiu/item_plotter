@@ -75,7 +75,7 @@ class TextStyle: BaseStyle() {
       RectPool.release(measureRect)
 
       val blockRect = RectPool.obtain()
-      StyleUtils.measureBlockRect(bound, this, textWidth, textHeight, blockRect)
+      StyleUtils.measureBlock(bound, this, textWidth, textHeight, blockRect)
 
       val textLeft = textInitLeft + blockRect.left
       val textBottom = textInitTop + blockRect.bottom

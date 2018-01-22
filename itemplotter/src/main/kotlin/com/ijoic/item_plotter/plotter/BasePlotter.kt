@@ -362,7 +362,7 @@ abstract class BasePlotter: Plotter {
     val bound = RectPool.obtain()
     bound.set(left, top, left + width, top + height)
 
-    StyleUtils.drawWithClipRect(bound, canvas, {
+    StyleUtils.drawAndClipBound(bound, canvas, {
       onDraw(bound, canvas, itemData)
     })
     RectPool.release(bound)
