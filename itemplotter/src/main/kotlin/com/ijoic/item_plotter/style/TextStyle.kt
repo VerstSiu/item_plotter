@@ -52,10 +52,12 @@ class TextStyle: BaseStyle() {
    * @param canvas canvas.
    * @param text text.
    * @param paint text paint.
-   * @param renderAppend render append: fun(textWidth: Int, textHeight: Int).
+   * @param renderAppend render append: fun(textBound: Rect).
    */
-  fun drawText(bound: Rect, canvas: Canvas, text: String?, paint: Paint? = null, renderAppend: ((Int, Int) -> Unit)? = null) {
-    if (text == null || text.isEmpty()) {
+  fun drawText(bound: Rect, canvas: Canvas, text: String?, paint: Paint? = null, renderAppend: ((Rect) -> Unit)? = null) {
+    val textColor = this.textColor
+
+    if (text == null || text.isEmpty() || textColor == Color.TRANSPARENT) {
       return
     }
     val textPaint = paint ?: PaintPool.obtainTextPaint()
@@ -64,26 +66,26 @@ class TextStyle: BaseStyle() {
     textPaint.typeface = typeface
 
     // draw text.
-    if (textColor !=  Color.TRANSPARENT) {
-      val measureRect = RectPool.obtain()
-      textPaint.textAlign = Paint.Align.LEFT
-      textPaint.getTextBounds(text, 0, text.length, measureRect)
+    val measureRect = RectPool.obtain()
+    textPaint.textAlign = Paint.Align.LEFT
+    textPaint.getTextBounds(text, 0, text.length, measureRect)
 
-      val textInitLeft = -measureRect.left
-      val textInitTop = -measureRect.bottom
-      val textWidth = measureRect.width()
-      val textHeight = measureRect.height()
-      RectPool.release(measureRect)
+    val textInitLeft = -measureRect.left
+    val textInitTop = -measureRect.bottom
+    val textWidth = measureRect.width()
+    val textHeight = measureRect.height()
+    RectPool.release(measureRect)
 
-      val blockRect = RectPool.obtain()
-      StyleUtils.measureBlock(bound, this, textWidth, textHeight, blockRect)
+    val blockRect = RectPool.obtain()
+    StyleUtils.measureBlock(bound, this, textWidth, textHeight, blockRect)
 
-      val textLeft = textInitLeft + blockRect.left
-      val textBottom = textInitTop + blockRect.bottom
-      RectPool.release(blockRect)
+    val textLeft = textInitLeft + blockRect.left
+    val textBottom = textInitTop + blockRect.bottom
 
-      canvas.drawText(text, textLeft.toFloat(), textBottom.toFloat(), textPaint)
-    }
+    canvas.drawText(text, textLeft.toFloat(), textBottom.toFloat(), textPaint)
+    renderAppend?.invoke(blockRect)
+    RectPool.release(blockRect)
+
     if (paint == null) {
       PaintPool.release(textPaint)
     }

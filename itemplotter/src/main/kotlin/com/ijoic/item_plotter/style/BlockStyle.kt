@@ -81,6 +81,11 @@ class BlockStyle: BaseStyle() {
    * @param renderAppend render item: fun(blockBound: Rect).
    */
   fun drawColor(bound: Rect, canvas: Canvas, paint: Paint? = null, renderAppend: ((Rect) -> Unit)? = null) {
+    val backgroundColor = this.backgroundColor
+
+    if (backgroundColor == Color.TRANSPARENT) {
+      return
+    }
     if (paint == null) {
       drawAndClipRect(bound, canvas, {
         canvas.drawColor(backgroundColor)
@@ -106,6 +111,11 @@ class BlockStyle: BaseStyle() {
    * @param renderAppend render item: fun(blockBound: Rect).
    */
   fun drawRoundRect(bound: Rect, canvas: Canvas, paint: Paint? = null, renderAppend: ((Rect) -> Unit)? = null) {
+    val backgroundColor = this.backgroundColor
+
+    if (backgroundColor == Color.TRANSPARENT) {
+      return
+    }
     val colorPaint = paint ?: PaintPool.obtainFillPaint()
     colorPaint.color = backgroundColor
 
