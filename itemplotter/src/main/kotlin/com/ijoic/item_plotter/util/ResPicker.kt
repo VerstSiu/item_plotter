@@ -19,10 +19,7 @@ package com.ijoic.item_plotter.util
 
 import android.content.Context
 import android.content.res.Resources
-import android.support.annotation.ColorRes
-import android.support.annotation.DimenRes
-import android.support.annotation.DrawableRes
-import android.support.annotation.IntegerRes
+import android.support.annotation.*
 import android.support.v4.content.res.ResourcesCompat
 
 /**
@@ -57,6 +54,14 @@ class ResPicker(context: Context) {
   fun pickColor(@ColorRes id: Int, theme: Resources.Theme? = null) = ResourcesCompat.getColor(r, id, theme)
 
   /**
+   * Returns color state list.
+   *
+   * @param id res id.
+   * @param theme res theme.
+   */
+  fun pickColorStateList(@ColorRes id: Int, theme: Resources.Theme? = null) = ResourcesCompat.getColorStateList(r, id, theme)
+
+  /**
    * Returns drawable.
    *
    * @param id res id.
@@ -65,9 +70,45 @@ class ResPicker(context: Context) {
   fun pickDrawable(@DrawableRes id: Int, theme: Resources.Theme? = null) = ResourcesCompat.getDrawable(r, id, theme)
 
   /**
+   * Returns string value.
+   *
+   * @param id res id.
+   */
+  fun pickString(@StringRes id: Int) = r.getString(id)
+
+  /**
+   * Returns string array.
+   *
+   * @param id res id.
+   */
+  fun pickStringArray(@ArrayRes id: Int) = r.getStringArray(id)
+
+  /**
+   * Returns boolean.
+   *
+   * @param id res id.
+   */
+  fun pickBoolean(@BoolRes id: Int) = r.getBoolean(id)
+
+  /**
    * Returns int.
    *
    * @param id res id.
    */
   fun pickInt(@IntegerRes id: Int) = r.getInteger(id)
+
+  /**
+   * Returns int array.
+   *
+   * @param id res id.
+   */
+  fun pickIntArray(@ArrayRes id: Int) = r.getIntArray(id)
+
+  /**
+   * Returns format string.
+   *
+   * @param id res id.
+   * @param formatArgs format arguments.
+   */
+  fun formatString(@StringRes id: Int, vararg formatArgs: Any) = r.getString(id, formatArgs)
 }
