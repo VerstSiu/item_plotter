@@ -56,6 +56,8 @@ open class LinearPlotterGroup(orientation: Int = HORIZONTAL): PlotterGroup<Linea
   /* Measure */
 
   override fun measure(resChanged: Boolean, widthMeasureSpec: Int, heightMeasureSpec: Int) {
+    super.measure(resChanged, widthMeasureSpec, heightMeasureSpec)
+
     if (isHorizontal) {
       performMeasureHorizontal(resChanged, widthMeasureSpec, heightMeasureSpec)
     } else {
@@ -65,6 +67,8 @@ open class LinearPlotterGroup(orientation: Int = HORIZONTAL): PlotterGroup<Linea
 
   private fun performMeasureHorizontal(resChanged: Boolean, widthMeasureSpec: Int, heightMeasureSpec: Int) {
     val plotterItems = getPlotterItems()
+    val requiredWidth = measuredWidth
+    val requiredHeight = measuredHeight
     var totalWidth = 0
     var totalHeight = 0
 
@@ -111,11 +115,18 @@ open class LinearPlotterGroup(orientation: Int = HORIZONTAL): PlotterGroup<Linea
       }
     }
 
-    setExpectedMeasureDimension(widthMeasureSpec, heightMeasureSpec, totalWidth, totalHeight)
+    setExpectedMeasureDimension(
+        widthMeasureSpec,
+        heightMeasureSpec,
+        Math.max(totalWidth, requiredWidth),
+        Math.max(totalHeight, requiredHeight)
+    )
   }
 
   private fun performMeasureVertical(resChanged: Boolean, widthMeasureSpec: Int, heightMeasureSpec: Int) {
     val plotterItems = getPlotterItems()
+    val requiredWidth = measuredWidth
+    val requiredHeight = measuredHeight
     var totalWidth = 0
     var totalHeight = 0
 
@@ -162,7 +173,12 @@ open class LinearPlotterGroup(orientation: Int = HORIZONTAL): PlotterGroup<Linea
       }
     }
 
-    setExpectedMeasureDimension(widthMeasureSpec, heightMeasureSpec, totalWidth, totalHeight)
+    setExpectedMeasureDimension(
+        widthMeasureSpec,
+        heightMeasureSpec,
+        Math.max(totalWidth, requiredWidth),
+        Math.max(totalHeight, requiredHeight)
+    )
   }
 
   /* Touch */

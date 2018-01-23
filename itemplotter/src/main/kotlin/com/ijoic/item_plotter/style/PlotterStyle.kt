@@ -42,4 +42,14 @@ open class PlotterStyle {
    */
   val padding = RoundDimen()
 
+  /**
+   * Returns measured min width.
+   */
+  open fun measureMinWidth() = padding.minRequiredWidth
+
+  /**
+   * Returns measured min height.
+   */
+  open fun measureMinHeight() = padding.minRequiredHeight
+
 }

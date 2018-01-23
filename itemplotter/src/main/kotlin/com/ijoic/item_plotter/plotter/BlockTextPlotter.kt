@@ -48,6 +48,10 @@ open class BlockTextPlotter : Plotter() {
    */
   val blockStyle = BlockStyle()
 
+  override fun measureMinWidth() = appendExpectedMinWidth(super.measureMinWidth(), textStyle, blockStyle)
+
+  override fun measureMinHeight() = appendExpectedMinHeight(super.measureMinHeight(), textStyle, blockStyle)
+
   /* Draw */
 
   override fun onDraw(bound: Rect, canvas: Canvas, itemData: ItemData?) {

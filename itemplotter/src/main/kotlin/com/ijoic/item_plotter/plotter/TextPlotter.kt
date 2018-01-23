@@ -39,6 +39,10 @@ open class TextPlotter: Plotter() {
    */
   val textStyle = TextStyle()
 
+  override fun measureMinWidth() = appendExpectedMinWidth(super.measureMinWidth(), textStyle)
+
+  override fun measureMinHeight() = appendExpectedMinHeight(super.measureMinHeight(), textStyle)
+
   /* Draw */
 
   override fun onDraw(bound: Rect, canvas: Canvas, itemData: ItemData?) {

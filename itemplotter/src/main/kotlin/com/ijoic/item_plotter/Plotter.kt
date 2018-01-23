@@ -25,12 +25,11 @@ import android.support.annotation.IntRange
 import android.view.View
 import android.view.ViewGroup
 import com.ijoic.item_plotter.style.BlockStyle
+import com.ijoic.item_plotter.style.PlotterStyle
 import com.ijoic.item_plotter.util.RectPool
 
 /**
  * Plotter.
- *
- * <p>Only support measure of MATCH_PARENT or exactly dimensions.</p>
  *
  * @author xiao.yl on 2018/1/20.
  * @version 1.0
@@ -148,6 +147,16 @@ abstract class Plotter {
   var layoutParams: ViewGroup.LayoutParams? = null
 
   /**
+   * Min width.
+   */
+  var minWidth = 0
+
+  /**
+   * Min height.
+   */
+  var minHeight = 0
+
+  /**
    * Returns params width.
    *
    * @param defaultWidth default width.
@@ -229,32 +238,76 @@ abstract class Plotter {
 
     // measure width.
     val paramsWidth = getParamsWidth()
+    val realParamsWidth = Math.max(paramsWidth, 0)
+    val requiredWidth = Math.max(realParamsWidth, measureMinWidth())
 
     val widthMode = View.MeasureSpec.getMode(widthMeasureSpec)
     val widthSize = View.MeasureSpec.getSize(widthMeasureSpec)
 
     val measuredWidth = when (widthMode) {
       View.MeasureSpec.EXACTLY -> widthSize
-      View.MeasureSpec.AT_MOST -> if (paramsWidth == ViewGroup.LayoutParams.MATCH_PARENT) widthSize else Math.max(paramsWidth, 0)
-      View.MeasureSpec.UNSPECIFIED -> Math.max(paramsWidth, 0)
+      View.MeasureSpec.AT_MOST -> if (paramsWidth == ViewGroup.LayoutParams.MATCH_PARENT) widthSize else Math.min(widthSize, requiredWidth)
+      View.MeasureSpec.UNSPECIFIED -> requiredWidth
       else -> 0
     }
 
     // measure height.
     val paramsHeight = getParamsHeight()
+    val realParamsHeight = Math.max(paramsHeight, 0)
+    val requiredHeight = Math.max(realParamsHeight, measureMinHeight())
 
     val heightMode = View.MeasureSpec.getMode(heightMeasureSpec)
     val heightSize = View.MeasureSpec.getSize(heightMeasureSpec)
 
     val measuredHeight = when (heightMode) {
       View.MeasureSpec.EXACTLY -> heightSize
-      View.MeasureSpec.AT_MOST -> if (paramsWidth == ViewGroup.LayoutParams.MATCH_PARENT) heightSize else Math.max(paramsHeight, 0)
-      View.MeasureSpec.UNSPECIFIED -> Math.max(paramsHeight, 0)
+      View.MeasureSpec.AT_MOST -> if (paramsWidth == ViewGroup.LayoutParams.MATCH_PARENT) heightSize else Math.min(heightSize, requiredHeight)
+      View.MeasureSpec.UNSPECIFIED -> requiredHeight
       else -> 0
     }
 
     // update measure dimension.
     setMeasureDimension(measuredWidth, measuredHeight)
+  }
+
+  /**
+   * Returns measured min width.
+   */
+  protected open fun measureMinWidth() = Math.max(backgroundStyle.measureMinWidth(), minWidth)
+
+  /**
+   * Returns measured min height.
+   */
+  protected open fun measureMinHeight() = Math.max(backgroundStyle.measureMinHeight(), minHeight)
+
+  /**
+   * Append expected min width.
+   *
+   * @param baseWidth base width.
+   * @param styles styles.
+   */
+  protected fun appendExpectedMinWidth(baseWidth: Int, vararg styles: PlotterStyle): Int {
+    var appendWidth = baseWidth
+
+    styles.forEach {
+      appendWidth += it.measureMinWidth()
+    }
+    return appendWidth
+  }
+
+  /**
+   * Append expected min height.
+   *
+   * @param baseHeight base height.
+   * @param styles styles.
+   */
+  protected fun appendExpectedMinHeight(baseHeight: Int, vararg styles: PlotterStyle): Int {
+    var appendHeight = baseHeight
+
+    styles.forEach {
+      appendHeight += it.measureMinHeight()
+    }
+    return appendHeight
   }
 
   /**

@@ -71,6 +71,18 @@ class RoundDimen {
     get() = !stateInit
 
   /**
+   * Min required width.
+   */
+  val minRequiredWidth: Int
+      get() = left + right
+
+  /**
+   * Min required height.
+   */
+  val minRequiredHeight: Int
+      get() = top + bottom
+
+  /**
    * Set property value.
    *
    * @param left left.
