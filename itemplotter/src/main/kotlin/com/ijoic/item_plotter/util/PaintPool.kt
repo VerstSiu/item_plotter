@@ -31,18 +31,32 @@ object PaintPool : InstancePool<Paint>({ Paint() }) {
   }
 
   /**
-   * Returns text paint instance.
+   * Returns fill paint.
    */
-  fun obtainTextPaint() = obtain().apply {
+  fun obtainFillPaint() = obtain().apply {
     style = Paint.Style.FILL
+  }
+
+  /**
+   * Returns smooth fill paint.
+   */
+  fun obtainSmoothFillPaint() = obtainFillPaint().apply {
     isDither = true
     isAntiAlias = true
   }
 
   /**
-   * Returns fill paint.
+   * Returns stroke paint.
    */
-  fun obtainFillPaint() = obtain().apply {
-    style = Paint.Style.FILL
+  fun obtainStrokePaint() = obtain().apply {
+    style = Paint.Style.STROKE
+  }
+
+  /**
+   * Returns smooth stroke paint.
+   */
+  fun obtainSmoothStrokePaint() = obtainStrokePaint().apply {
+    isDither = true
+    isAntiAlias = true
   }
 }

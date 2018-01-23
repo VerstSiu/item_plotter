@@ -70,7 +70,7 @@ class TextStyle: PlotterStyle() {
       }
       return
     }
-    val textPaint = paint ?: PaintPool.obtainTextPaint()
+    val textPaint = paint ?: PaintPool.obtainSmoothFillPaint()
     textPaint.color = textColor
     textPaint.textSize = textSize
     textPaint.typeface = typeface
