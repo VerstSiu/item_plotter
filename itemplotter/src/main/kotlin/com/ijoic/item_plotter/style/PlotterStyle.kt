@@ -15,28 +15,31 @@
  *  limitations under the License.
  *
  */
-package com.ijoic.item_plotter.util
+package com.ijoic.item_plotter.style
+
+import android.view.Gravity
+import com.ijoic.item_plotter.style.dimen.RoundDimen
 
 /**
- * Lazy loader.
+ * Plotter style.
  *
  * @author xiao.yl on 2018/1/22.
  * @version 1.0
  */
-class LazyLoader<out VALUE>(private val createInstance: () -> VALUE) {
-  private var instance: VALUE? = null
+open class PlotterStyle {
+  /**
+   * Gravity.
+   */
+  var gravity: Int = Gravity.CENTER
 
   /**
-   * Returns lazy instance.
+   * Margin.
    */
-  fun loadInstance(): VALUE {
-    val oldInstance = this.instance
+  val margin = RoundDimen()
 
-    if (oldInstance != null) {
-      return oldInstance
-    }
-    val newInstance = createInstance()
-    instance = newInstance
-    return newInstance
-  }
+  /**
+   * Padding.
+   */
+  val padding = RoundDimen()
+
 }

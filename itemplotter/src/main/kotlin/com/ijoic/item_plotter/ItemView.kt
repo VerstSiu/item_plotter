@@ -119,7 +119,7 @@ open class ItemView(context: Context, attrs: AttributeSet? = null): View(context
     if (plotter != null) {
       val resChanged = plotter.prepareResource(context)
       plotter.measure(resChanged, widthMeasureSpec, heightMeasureSpec)
-      setMeasuredDimension(plotter.getMeasuredWidth(), plotter.getMeasuredHeight())
+      setMeasuredDimension(plotter.measuredWidth, plotter.measuredHeight)
     } else {
       super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }

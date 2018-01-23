@@ -28,7 +28,7 @@ import com.ijoic.item_plotter.util.StyleUtils
  * @author xiao.yl on 2018/1/21.
  * @version 1.0
  */
-class TextStyle: BaseStyle() {
+class TextStyle: PlotterStyle() {
 
   /**
    * Text color.

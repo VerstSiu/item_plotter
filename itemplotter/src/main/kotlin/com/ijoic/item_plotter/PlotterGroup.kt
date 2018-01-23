@@ -17,26 +17,110 @@
  */
 package com.ijoic.item_plotter
 
+import android.content.Context
+import android.support.annotation.IdRes
 import android.view.ViewGroup
 
 /**
- * Plotter group.
+ * Base plotter group.
  *
  * @author xiao.yl on 2018/1/20.
  * @version 1.0
  */
-interface PlotterGroup<PARAMS: ViewGroup.LayoutParams>: Plotter {
+abstract class PlotterGroup<PARAMS: ViewGroup.LayoutParams>: Plotter() {
+
+  /* LayoutParams */
+
   /**
-   * Add plotter.
+   * Returns child layout params.
    *
-   * @param plotter plotter.
+   * @param plotter child plotter.
    */
-  fun addPlotter(plotter: Plotter, layoutParams: PARAMS? = null)
+  protected fun getChildLayoutParams(plotter: Plotter): PARAMS? {
+    val oldParams = plotter.layoutParams ?: return null
+    return transformLayoutParams(oldParams)
+  }
 
   /**
    * Transform layout params.
    *
    * @param oldParams old params.
    */
-  fun transformLayoutParams(oldParams: ViewGroup.LayoutParams): PARAMS
+  protected abstract fun transformLayoutParams(oldParams: ViewGroup.LayoutParams): PARAMS
+
+  /* PlotterItems */
+
+  private val plotterItems = ArrayList<Plotter>()
+
+  /**
+   * Returns plotter items.
+   */
+  protected fun getPlotterItems(): List<Plotter> = plotterItems.toMutableList()
+
+  /**
+   * Add plotter.
+   *
+   * @param plotter plotter.
+   */
+  fun addPlotter(plotter: Plotter, layoutParams: PARAMS?) {
+    val oldParams = plotter.layoutParams
+
+    if (oldParams == null) {
+      plotter.layoutParams = layoutParams
+    } else {
+      plotter.layoutParams = transformLayoutParams(oldParams)
+    }
+    plotterItems.add(plotter)
+  }
+
+  /* Resources */
+
+  override fun prepareResource(context: Context): Boolean {
+    var resChanged = super.prepareResource(context)
+    val plotterItems = getPlotterItems()
+
+    plotterItems.forEach {
+      if (it.prepareResource(context)) {
+        resChanged = true
+      }
+    }
+    return resChanged
+  }
+
+  /* Touch */
+
+  override fun getTouchPlotterId(left: Int, top: Int, touchX: Int, touchY: Int): Int {
+    val childPlotterId = getChildTouchPlotterId(left, top, touchX, touchY)
+
+    if (childPlotterId != 0) {
+      return childPlotterId
+    }
+    return super.getTouchPlotterId(left, top, touchX, touchY)
+  }
+
+  /**
+   * Returns child touch plotter id.
+   */
+  @IdRes
+  protected abstract fun getChildTouchPlotterId(left: Int, top: Int, touchX: Int, touchY: Int): Int
+
+  /* FindChild */
+
+  override fun getPlotterById(plotterId: Int): Plotter? {
+    var plotter = super.getPlotterById(plotterId)
+
+    if (plotter == null && plotterId != 0) {
+      val childItems = getPlotterItems()
+
+      childItems.forEach {
+        plotter = it.getPlotterById(plotterId)
+
+        if (plotter != null) {
+          return plotter
+        }
+      }
+    }
+    return plotter
+  }
+
 }

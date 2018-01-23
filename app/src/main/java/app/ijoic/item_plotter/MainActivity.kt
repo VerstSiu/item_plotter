@@ -28,9 +28,9 @@ class MainActivity : AppCompatActivity() {
     // Test plotter group.
     itemView.plotter = LinearPlotterGroup().apply {
       addPlotter(TextPlotter().apply {
-        setBindKey("user_name")
-        setPlotterId(R.id.user_name)
-        setTouchEnabled(true)
+        bindKey = "user_name"
+        plotterId = R.id.user_name
+        isTouchEnabled = true
 
         text = "Hello World"
         textStyle.apply {
@@ -49,9 +49,9 @@ class MainActivity : AppCompatActivity() {
       ))
 
       addPlotter(RoundRectPlotter().apply {
-        setBindKey("user_age")
-        setPlotterId(R.id.test_hello_world)
-        setTouchEnabled(true)
+        bindKey = "user_age"
+        plotterId = R.id.test_hello_world
+        isTouchEnabled = true
 
         text = "Hello World"
         textStyle.apply {
@@ -100,7 +100,7 @@ class MainActivity : AppCompatActivity() {
         val plotter = itemView.plotter?.getPlotterById(plotterId)
 
         if (plotter != null) {
-          Toast.makeText(this@MainActivity, "${plotter.getBindKey()} clicked", Toast.LENGTH_SHORT).show()
+          Toast.makeText(this@MainActivity, "${plotter.bindKey} clicked", Toast.LENGTH_SHORT).show()
         }
       }
     }
