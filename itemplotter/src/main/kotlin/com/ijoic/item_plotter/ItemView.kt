@@ -32,15 +32,53 @@ import android.view.View
  */
 open class ItemView(context: Context, attrs: AttributeSet? = null): View(context, attrs) {
 
+  /* Plotter */
+
   /**
    * Plotter provider.
    */
   var plotter: Plotter? = null
 
   /**
+   * Plotter Provider.
+   *
+   * <p>Use to override and provide plotter instance when item view is attached to window.
+   */
+  var plotterProvider: (() -> Plotter?)? = null
+
+  /**
+   * Returns plotter instance or null if not any plotter instance could be read or created.
+   *
+   * @see plotter
+   * @see plotterProvider
+   */
+  private fun readPlotterInstance(): Plotter? {
+    return plotter ?: plotterProvider?.invoke()
+  }
+
+  /* ItemData */
+
+  /**
    * Item data.
    */
   var itemData: ItemData? = null
+
+  /**
+   * Item data Provider.
+   *
+   * <p>Use to override and provide item data instance when item view is attached to window.
+   */
+  var itemDataProvider: (() -> ItemData?)? = null
+
+  /**
+   * Returns item data instance or null if not any item data instance could be read or created.
+   *
+   * @see itemData
+   * @see itemDataProvider
+   */
+  private fun readItemDataInstance(): ItemData? {
+    return itemData ?: itemDataProvider?.invoke()
+  }
 
   /* ItemClickListener */
 
@@ -64,29 +102,19 @@ open class ItemView(context: Context, attrs: AttributeSet? = null): View(context
 
   /* WindowAttach */
 
-  /**
-   * Plotter Creator.
-   *
-   * <p>Use to override and provide plotter instance when item view is attached to window.
-   */
-  protected var plotterCreator: (() -> Plotter?)? = null
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-    plotter = plotter ?: plotterCreator?.invoke()
-  }
-
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
     plotter = null
+    plotterProvider = null
     itemData = null
+    itemDataProvider = null
     itemClickListener = null
   }
 
   /* Measure */
 
   override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-    val plotter = this.plotter
+    val plotter = readPlotterInstance()
 
     if (plotter != null) {
       val resChanged = plotter.prepareResource(context)
@@ -126,13 +154,13 @@ open class ItemView(context: Context, attrs: AttributeSet? = null): View(context
     }
   }
 
-  private fun readPressedPlotterId(event: MotionEvent) = plotter?.getTouchPlotterId(0, 0, event.x.toInt(), event.y.toInt()) ?: 0
+  private fun readPressedPlotterId(event: MotionEvent) = readPlotterInstance()?.getTouchPlotterId(0, 0, event.x.toInt(), event.y.toInt()) ?: 0
 
   override fun onDraw(canvas: Canvas?) {
     super.onDraw(canvas)
 
     if (canvas != null) {
-      plotter?.draw(0, 0, canvas, itemData)
+      readPlotterInstance()?.draw(0, 0, canvas, readItemDataInstance())
     }
   }
 }
