@@ -148,11 +148,15 @@ abstract class Plotter {
 
   /**
    * Min width.
+   *
+   * <p>Supports value for ViewGroup.LayoutParams.MATCH_PARENT.</p>
    */
   var minWidth = 0
 
   /**
    * Min height.
+   *
+   * <p>Supports value for ViewGroup.LayoutParams.MATCH_PARENT.</p>
    */
   var minHeight = 0
 
@@ -246,7 +250,11 @@ abstract class Plotter {
 
     val measuredWidth = when (widthMode) {
       View.MeasureSpec.EXACTLY -> widthSize
-      View.MeasureSpec.AT_MOST -> if (paramsWidth == ViewGroup.LayoutParams.MATCH_PARENT) widthSize else Math.min(widthSize, requiredWidth)
+      View.MeasureSpec.AT_MOST -> when {
+        paramsWidth == ViewGroup.LayoutParams.MATCH_PARENT -> widthSize
+        minWidth == ViewGroup.LayoutParams.MATCH_PARENT -> widthSize
+        else -> Math.min(widthSize, requiredWidth)
+      }
       View.MeasureSpec.UNSPECIFIED -> requiredWidth
       else -> 0
     }
@@ -261,7 +269,11 @@ abstract class Plotter {
 
     val measuredHeight = when (heightMode) {
       View.MeasureSpec.EXACTLY -> heightSize
-      View.MeasureSpec.AT_MOST -> if (paramsWidth == ViewGroup.LayoutParams.MATCH_PARENT) heightSize else Math.min(heightSize, requiredHeight)
+      View.MeasureSpec.AT_MOST -> when {
+        paramsHeight == ViewGroup.LayoutParams.MATCH_PARENT -> heightSize
+        minHeight == ViewGroup.LayoutParams.MATCH_PARENT -> heightSize
+        else -> Math.min(heightSize, requiredHeight)
+      }
       View.MeasureSpec.UNSPECIFIED -> requiredHeight
       else -> 0
     }
