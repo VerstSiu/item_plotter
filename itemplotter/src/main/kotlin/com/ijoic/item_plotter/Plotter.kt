@@ -179,11 +179,9 @@ abstract class Plotter {
   private var firstInit = false
 
   /**
-   * Check resources changed.
-   *
-   * @param context context.
+   * Resources manager.
    */
-  protected open fun checkResChanged(context: Context) = !firstInit
+  var resManager: ResManager? = null
 
   /**
    * Prepare resource.
@@ -191,20 +189,15 @@ abstract class Plotter {
    * @param context context.
    */
   internal open fun prepareResource(context: Context): Boolean {
-    if (checkResChanged(context)) {
-      onPrepareResource(context)
+    val oldFirstInit = firstInit
+    val resManager = this.resManager
+    firstInit = true
+
+    if (resManager != null && resManager.checkResChanged(context)) {
+      resManager.prepareResource(context)
       return true
     }
-    return false
-  }
-
-  /**
-   * Prepare resource when res changed.
-   *
-   * @param context context.
-   */
-  protected open fun onPrepareResource(context: Context) {
-    firstInit = true
+    return oldFirstInit
   }
 
   /* Measure */
