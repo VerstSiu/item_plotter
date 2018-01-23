@@ -38,5 +38,5 @@ interface ResManager {
    *
    * @param context context.
    */
-  fun prepareResource(context: Context): Boolean
+  fun prepareResource(context: Context)
 }
