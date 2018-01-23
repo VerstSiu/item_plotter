@@ -22,7 +22,6 @@ import android.graphics.Canvas
 import android.graphics.Rect
 import android.support.annotation.IdRes
 import android.support.annotation.IntRange
-import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import com.ijoic.item_plotter.style.BlockStyle
@@ -395,11 +394,7 @@ abstract class Plotter {
   /**
    * Background style.
    */
-  val backgroundStyle = BlockStyle().apply {
-    width = ViewGroup.LayoutParams.MATCH_PARENT
-    height = ViewGroup.LayoutParams.MATCH_PARENT
-    gravity = Gravity.START or Gravity.TOP
-  }
+  val backgroundStyle = BlockStyle()
 
   /**
    * Draw plotter content.

@@ -18,6 +18,7 @@
 package com.ijoic.item_plotter.style
 
 import android.graphics.*
+import android.view.ViewGroup
 import com.ijoic.item_plotter.util.PaintPool
 import com.ijoic.item_plotter.util.RectFPool
 import com.ijoic.item_plotter.util.RectPool
@@ -35,14 +36,14 @@ class BlockStyle: PlotterStyle() {
    *
    * <p>Use ViewGroup.LayoutParams.MATCH_PARENT to specify match width.</p>
    */
-  var width: Int = 0
+  var width: Int = ViewGroup.LayoutParams.MATCH_PARENT
 
   /**
    * Height.
    *
    * <p>Use ViewGroup.LayoutParams.MATCH_PARENT to specify match height.</p>
    */
-  var height: Int = 0
+  var height: Int = ViewGroup.LayoutParams.MATCH_PARENT
 
   /**
    * Background radius.
@@ -151,6 +152,8 @@ class BlockStyle: PlotterStyle() {
     // draw round rect
     val colorPaint = paint ?: PaintPool.obtainFillPaint()
     colorPaint.color = backgroundColor
+    colorPaint.isDither = true
+    colorPaint.isAntiAlias = true
 
     drawAndClipRectF(bound, canvas, {
       canvas.drawRoundRect(it, radius, radius, colorPaint)

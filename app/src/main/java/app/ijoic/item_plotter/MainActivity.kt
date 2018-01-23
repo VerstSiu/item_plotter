@@ -1,18 +1,16 @@
 package app.ijoic.item_plotter
 
-import android.graphics.Color
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Gravity
-import android.view.ViewGroup
-import android.widget.LinearLayout
+import android.support.v7.widget.DividerItemDecoration
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.widget.Toast
+import app.ijoic.item_plotter.adapter.TestAdapter
 import app.ijoic.item_plotter.entity.User
-import app.ijoic.item_plotter.plotter.RoundRectPlotter
+import app.ijoic.item_plotter.widget.TestItemView
 import com.ijoic.item_plotter.ItemView
 import com.ijoic.item_plotter.data.TransformItemData
-import com.ijoic.item_plotter.plotter.TextPlotter
-import com.ijoic.item_plotter.plotter_group.LinearPlotterGroup
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,65 +18,11 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
     testSimple()
+    testList()
   }
 
   private fun testSimple() {
-    val itemView = findViewById<ItemView>(R.id.item_view)
-
-    // Test plotter group.
-    itemView.plotter = LinearPlotterGroup().apply {
-      addPlotter(TextPlotter().apply {
-        bindKey = "user_name"
-        plotterId = R.id.user_name
-        isTouchEnabled = true
-
-        text = "Hello World"
-        textStyle.apply {
-          gravity = Gravity.CENTER
-          textColor = 0xFF333333.toInt()
-          textSize = 48F
-        }
-        backgroundStyle.apply {
-          backgroundColor = 0xFFF5F5F5.toInt()
-        }
-      },
-      LinearLayout.LayoutParams(
-        0,
-        ViewGroup.LayoutParams.MATCH_PARENT,
-        1F
-      ))
-
-      addPlotter(RoundRectPlotter().apply {
-        bindKey = "user_age"
-        plotterId = R.id.test_hello_world
-        isTouchEnabled = true
-
-        text = "Hello World"
-        textStyle.apply {
-          padding.setAll(20)
-          gravity = Gravity.END or Gravity.BOTTOM
-          textColor = 0xFF333333.toInt()
-          textSize = 48F
-        }
-        backgroundStyle.apply {
-          padding.setAll(20)
-          backgroundColor = 0xffd0d0d0.toInt()
-        }
-
-        rectStyle.apply {
-          width = ViewGroup.LayoutParams.MATCH_PARENT
-          height = ViewGroup.LayoutParams.MATCH_PARENT
-          padding.setAll(20)
-          backgroundColor = Color.GREEN
-          radius = 20F
-        }
-      },
-      LinearLayout.LayoutParams(
-          0,
-          ViewGroup.LayoutParams.MATCH_PARENT,
-          1F
-      ))
-    }
+    val itemView = findViewById<TestItemView>(R.id.item_view)
 
     // Test bind data.
     itemView.postDelayed({
@@ -104,5 +48,36 @@ class MainActivity : AppCompatActivity() {
         }
       }
     }
+  }
+
+  private fun testList() {
+    val listView = findViewById<RecyclerView>(R.id.test_list)
+    val adapter = TestAdapter(this)
+
+    listView.apply {
+      this.adapter = adapter
+      layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
+      addItemDecoration(DividerItemDecoration(this@MainActivity, DividerItemDecoration.VERTICAL))
+    }
+
+    listView.postDelayed({
+      adapter.itemsData = listOf(
+          User("Tony", 17),
+          User("Jenny", 16),
+          User("John", 16),
+          User("Smith", 21),
+          User("Smith", 21),
+          User("Smith", 21),
+          User("Smith", 21),
+          User("Smith", 21),
+          User("Smith", 21),
+          User("Smith", 21),
+          User("Smith", 21),
+          User("Smith", 21),
+          User("Smith", 21),
+          User("Smith", 21)
+      )
+      adapter.notifyDataSetChanged()
+    }, 4000)
   }
 }
