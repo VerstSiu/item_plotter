@@ -19,4 +19,10 @@ open class BaseStyle {
    * Margin.
    */
   val margin = RoundDimen()
+
+  /**
+   * Padding.
+   */
+  val padding = RoundDimen()
+
 }

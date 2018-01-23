@@ -6,6 +6,7 @@ import android.view.Gravity
 import android.view.ViewGroup
 import com.ijoic.item_plotter.style.BaseStyle
 import com.ijoic.item_plotter.style.BlockStyle
+import com.ijoic.item_plotter.style.dimen.RoundDimen
 
 /**
  * Style utils.
@@ -90,15 +91,35 @@ object StyleUtils {
    * @param renderItem render item.
    */
   fun drawAndClipBound(bound: Rect, canvas: Canvas, renderItem: () -> Unit) {
-    if (bound.isEmpty) {
+    if (!bound.isEmpty) {
+      val restoreCount = canvas.save()
+
+      if (canvas.clipRect(bound)) {
+        renderItem.invoke()
+      }
+      canvas.restoreToCount(restoreCount)
+    }
+  }
+
+  /**
+   * Draw and clip padding.
+   *
+   * @param bound bound.
+   * @param renderItem render item: fun(clipBound: Rect).
+   * @param padding padding.
+   */
+  fun drawAndClipPadding(bound: Rect, renderItem: ((Rect) -> Unit)?, padding: RoundDimen) {
+    if (renderItem == null) {
       return
     }
-    val restoreCount = canvas.save()
-
-    if (canvas.clipRect(bound)) {
-      renderItem.invoke()
+    if (padding.isEmpty) {
+      renderItem.invoke(bound)
+    } else{
+      val clipBound = RectPool.obtainCopy(bound)
+      padding.trimBound(clipBound)
+      renderItem.invoke(clipBound)
+      RectPool.release(clipBound)
     }
-    canvas.restoreToCount(restoreCount)
   }
 
   /**

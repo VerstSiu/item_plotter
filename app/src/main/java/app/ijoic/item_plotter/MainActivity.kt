@@ -38,7 +38,9 @@ class MainActivity : AppCompatActivity() {
           textColor = 0xFF333333.toInt()
           textSize = 48F
         }
-        backgroundColor = 0xFFF5F5F5.toInt()
+        backgroundStyle.apply {
+          backgroundColor = 0xFFF5F5F5.toInt()
+        }
       },
       LinearLayout.LayoutParams(
         0,
@@ -53,20 +55,20 @@ class MainActivity : AppCompatActivity() {
 
         text = "Hello World"
         textStyle.apply {
+          padding.setAll(20)
           gravity = Gravity.END or Gravity.BOTTOM
-          margin.apply {
-            right = 20
-            bottom = 20
-          }
           textColor = 0xFF333333.toInt()
           textSize = 48F
         }
-        backgroundColor = 0xffd0d0d0.toInt()
+        backgroundStyle.apply {
+          padding.setAll(20)
+          backgroundColor = 0xffd0d0d0.toInt()
+        }
 
         rectStyle.apply {
           width = ViewGroup.LayoutParams.MATCH_PARENT
           height = ViewGroup.LayoutParams.MATCH_PARENT
-          margin.setAll(20)
+          padding.setAll(20)
           backgroundColor = Color.GREEN
           radius = 20F
         }

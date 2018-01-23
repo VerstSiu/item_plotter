@@ -84,12 +84,20 @@ class BlockStyle: BaseStyle() {
     val backgroundColor = this.backgroundColor
 
     if (backgroundColor == Color.TRANSPARENT) {
+      // always run render append, even if background is not required to render.
+      if (renderAppend != null) {
+        drawAndClipRect(bound, canvas, {
+          StyleUtils.drawAndClipPadding(it, renderAppend, padding)
+        })
+      }
       return
     }
+
+    // draw color
     if (paint == null) {
       drawAndClipRect(bound, canvas, {
         canvas.drawColor(backgroundColor)
-        renderAppend?.invoke(it)
+        StyleUtils.drawAndClipPadding(it, renderAppend, padding)
       })
 
     } else {
@@ -97,7 +105,7 @@ class BlockStyle: BaseStyle() {
 
       drawAndClipRect(bound, canvas, {
         canvas.drawRect(it, paint)
-        renderAppend?.invoke(it)
+        StyleUtils.drawAndClipPadding(it, renderAppend, padding)
       })
     }
   }
@@ -114,17 +122,43 @@ class BlockStyle: BaseStyle() {
     val backgroundColor = this.backgroundColor
 
     if (backgroundColor == Color.TRANSPARENT) {
+      // always run render append, even if background is not required to render.
+      if (renderAppend != null) {
+        drawAndClipRect(bound, canvas, {
+          StyleUtils.drawAndClipPadding(it, renderAppend, padding)
+        })
+      }
       return
     }
+
+    // draw round rect
     val colorPaint = paint ?: PaintPool.obtainFillPaint()
     colorPaint.color = backgroundColor
 
     drawAndClipRectF(bound, canvas, {
       canvas.drawRoundRect(it, radius, radius, colorPaint)
-    }, renderAppend = renderAppend)
+    }, renderAppend = {
+      StyleUtils.drawAndClipPadding(it, renderAppend, padding)
+    })
 
     if (paint == null) {
       PaintPool.release(colorPaint)
+    }
+  }
+
+  /**
+   * Draw text.
+   *
+   * @param bound bound.
+   * @param canvas canvas.
+   * @param paint text paint.
+   * @param renderAppend render item: fun(blockBound: Rect).
+   */
+  fun drawBackgroundAuto(bound: Rect, canvas: Canvas, paint: Paint? = null, renderAppend: ((Rect) -> Unit)? = null) {
+    if (radius == 0F) {
+      drawColor(bound, canvas, paint, renderAppend)
+    } else {
+      drawRoundRect(bound, canvas, paint, renderAppend)
     }
   }
 }

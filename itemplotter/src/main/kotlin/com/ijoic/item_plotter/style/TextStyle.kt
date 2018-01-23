@@ -53,11 +53,21 @@ class TextStyle: BaseStyle() {
    * @param text text.
    * @param paint text paint.
    * @param renderAppend render append: fun(textBound: Rect).
+   * @param clipPadding clip padding content or not.
    */
-  fun drawText(bound: Rect, canvas: Canvas, text: String?, paint: Paint? = null, renderAppend: ((Rect) -> Unit)? = null) {
+  fun drawText(bound: Rect, canvas: Canvas, text: String?, paint: Paint? = null, renderAppend: ((Rect) -> Unit)? = null, clipPadding: Boolean = false) {
     val textColor = this.textColor
+    val baseWidth = padding.left + padding.right
+    val baseHeight = padding.top + padding.bottom
 
     if (text == null || text.isEmpty() || textColor == Color.TRANSPARENT) {
+      // always run render append, even if background is not required to render.
+      if (renderAppend != null) {
+        val blockRect = RectPool.obtain()
+        StyleUtils.measureBlock(bound, this, baseWidth, baseHeight, blockRect)
+        renderAppend.invoke(blockRect)
+        RectPool.release(blockRect)
+      }
       return
     }
     val textPaint = paint ?: PaintPool.obtainTextPaint()
@@ -72,17 +82,27 @@ class TextStyle: BaseStyle() {
 
     val textInitLeft = -measureRect.left
     val textInitTop = -measureRect.bottom
-    val textWidth = measureRect.width()
-    val textHeight = measureRect.height()
+    val textWidth = measureRect.width() + baseWidth
+    val textHeight = measureRect.height() + baseHeight
     RectPool.release(measureRect)
 
     val blockRect = RectPool.obtain()
     StyleUtils.measureBlock(bound, this, textWidth, textHeight, blockRect)
 
-    val textLeft = textInitLeft + blockRect.left
-    val textBottom = textInitTop + blockRect.bottom
+    // draw text
+    StyleUtils.drawAndClipPadding(blockRect, {
+      val textLeft = textInitLeft + it.left
+      val textBottom = textInitTop + it.bottom
 
-    canvas.drawText(text, textLeft.toFloat(), textBottom.toFloat(), textPaint)
+      if (clipPadding) {
+        StyleUtils.drawAndClipBound(it, canvas, {
+          canvas.drawText(text, textLeft.toFloat(), textBottom.toFloat(), textPaint)
+        })
+      } else {
+        canvas.drawText(text, textLeft.toFloat(), textBottom.toFloat(), textPaint)
+      }
+    }, padding)
+
     renderAppend?.invoke(blockRect)
     RectPool.release(blockRect)
 

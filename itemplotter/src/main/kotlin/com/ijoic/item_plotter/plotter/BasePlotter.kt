@@ -19,14 +19,14 @@ package com.ijoic.item_plotter.plotter
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Rect
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import com.ijoic.item_plotter.ItemData
 import com.ijoic.item_plotter.Plotter
+import com.ijoic.item_plotter.style.BlockStyle
 import com.ijoic.item_plotter.util.RectPool
-import com.ijoic.item_plotter.util.StyleUtils
 
 /**
  * Base plotter.
@@ -352,9 +352,13 @@ abstract class BasePlotter: Plotter {
   /* Draw */
 
   /**
-   * Background color.
+   * Background style.
    */
-  var backgroundColor: Int = Color.TRANSPARENT
+  val backgroundStyle = BlockStyle().apply {
+    width = ViewGroup.LayoutParams.MATCH_PARENT
+    height = ViewGroup.LayoutParams.MATCH_PARENT
+    gravity = Gravity.START or Gravity.TOP
+  }
 
   override fun draw(left: Int, top: Int, canvas: Canvas, itemData: ItemData?) {
     val width = getMeasuredWidth()
@@ -362,9 +366,10 @@ abstract class BasePlotter: Plotter {
     val bound = RectPool.obtain()
     bound.set(left, top, left + width, top + height)
 
-    StyleUtils.drawAndClipBound(bound, canvas, {
-      onDraw(bound, canvas, itemData)
+    backgroundStyle.drawBackgroundAuto(bound, canvas, renderAppend = {
+      onDraw(it, canvas, itemData)
     })
+
     RectPool.release(bound)
   }
 
@@ -376,10 +381,6 @@ abstract class BasePlotter: Plotter {
    * @param canvas canvas.
    */
   protected open fun onDraw(bound: Rect, canvas: Canvas, itemData: ItemData?) {
-    // draw background.
-    if (backgroundColor != Color.TRANSPARENT) {
-      canvas.drawColor(backgroundColor)
-    }
   }
 
 }

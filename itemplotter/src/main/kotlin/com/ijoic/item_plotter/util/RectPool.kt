@@ -29,4 +29,9 @@ object RectPool: InstancePool<Rect>({ Rect() }) {
   override fun onReleaseElement(instance: Rect) {
     instance.setEmpty()
   }
+
+  /**
+   * Obtain rect instance and copy with src rect value.
+   */
+  fun obtainCopy(src: Rect) = obtain().apply { set(src) }
 }
