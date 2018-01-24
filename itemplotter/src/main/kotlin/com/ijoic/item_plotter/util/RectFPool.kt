@@ -17,6 +17,7 @@
  */
 package com.ijoic.item_plotter.util
 
+import android.graphics.Rect
 import android.graphics.RectF
 
 /**
@@ -29,4 +30,14 @@ object RectFPool: InstancePool<RectF>({ RectF() }) {
   override fun onReleaseElement(instance: RectF) {
     instance.setEmpty()
   }
+
+  /**
+   * Obtain rectF instance and copy with src rect value.
+   */
+  fun obtainCopy(src: Rect) = obtain().apply { set(src) }
+
+  /**
+   * Obtain rectF instance and copy with src rectF value.
+   */
+  fun obtainCopy(src: RectF) = obtain().apply { set(src) }
 }

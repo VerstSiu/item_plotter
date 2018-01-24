@@ -30,7 +30,7 @@ import com.ijoic.item_plotter.util.StyleUtils
  * @author xiao.yl on 2018/1/22.
  * @version 1.0
  */
-class BlockStyle: PlotterStyle() {
+open class BlockStyle: PlotterStyle() {
   /**
    * Width.
    *
@@ -56,129 +56,104 @@ class BlockStyle: PlotterStyle() {
   var backgroundColor: Int = Color.TRANSPARENT
 
   /**
-   * Draw contents with clip rect.
+   * Draw background auto..
    *
    * @param bound bound.
    * @param canvas canvas.
-   * @param renderItem render item: fun(blockBound: Rect).
+   * @param paint block paint.
+   * @param renderAppend render item: fun(blockBound: Rect).
    */
-  fun drawAndClipRect(bound: Rect, canvas: Canvas, renderItem: (Rect) -> Unit) {
+  fun drawBackground(bound: Rect, canvas: Canvas, paint: Paint? = null, renderAppend: ((Rect) -> Unit)? = null) {
     val blockRect = RectPool.obtain()
-    StyleUtils.measureBlock(bound, this, blockRect)
 
-    StyleUtils.drawAndClipBound(blockRect, canvas, {
-      renderItem.invoke(blockRect)
-    })
+    StyleUtils.measureBlock(bound, this, blockRect)
+    drawBackgroundDirect(blockRect, canvas, paint, renderAppend)
 
     RectPool.release(blockRect)
   }
 
   /**
-   * Draw contents with clip rect float.
+   * Draw background direct..
    *
-   * @param bound bound.
+   * @param blockBound block bound.
    * @param canvas canvas.
-   * @param renderItem render item: fun(blockBound: RectF).
+   * @param paint block paint.
    * @param renderAppend render item: fun(blockBound: Rect).
    */
-  fun drawAndClipRectF(bound: Rect, canvas: Canvas, renderItem: (RectF) -> Unit, renderAppend: ((Rect) -> Unit)? = null) {
-    drawAndClipRect(bound, canvas, {
-      val blockRectF = RectFPool.obtain().apply { set(it) }
-      renderItem.invoke(blockRectF)
-      renderAppend?.invoke(it)
-      RectFPool.release(blockRectF)
-    })
-  }
-
-  /**
-   * Draw text.
-   *
-   * @param bound bound.
-   * @param canvas canvas.
-   * @param paint text paint.
-   * @param renderAppend render item: fun(blockBound: Rect).
-   */
-  fun drawColor(bound: Rect, canvas: Canvas, paint: Paint? = null, renderAppend: ((Rect) -> Unit)? = null) {
+  fun drawBackgroundDirect(blockBound: Rect, canvas: Canvas, paint: Paint? = null, renderAppend: ((Rect) -> Unit)? = null) {
+    if (blockBound.isEmpty) {
+      return
+    }
     val backgroundColor = this.backgroundColor
 
     if (backgroundColor == Color.TRANSPARENT) {
       // always run render append, even if background is not required to render.
       if (renderAppend != null) {
-        drawAndClipRect(bound, canvas, {
-          StyleUtils.drawAndClipPadding(it, renderAppend, padding)
+        StyleUtils.drawAndClipBound(blockBound, canvas, {
+          StyleUtils.drawAndClipPadding(blockBound, renderAppend, padding)
         })
       }
       return
     }
+    val radius = this.radius
 
-    // draw color
+    if (radius <= 0F) {
+      drawColor(blockBound, canvas, backgroundColor, paint, renderAppend)
+    } else {
+      drawRoundRect(blockBound, canvas, backgroundColor, radius, paint, renderAppend)
+    }
+  }
+
+  /**
+   * Draw color.
+   *
+   * @param blockBound block bound.
+   * @param canvas canvas.
+   * @param backgroundColor background color.
+   * @param paint block paint.
+   * @param renderAppend render item: fun(blockBound: Rect).
+   */
+  private fun drawColor(blockBound: Rect, canvas: Canvas, backgroundColor: Int, paint: Paint? = null, renderAppend: ((Rect) -> Unit)? = null) {
     if (paint == null) {
-      drawAndClipRect(bound, canvas, {
+      StyleUtils.drawAndClipBound(blockBound, canvas, {
         canvas.drawColor(backgroundColor)
-        StyleUtils.drawAndClipPadding(it, renderAppend, padding)
+        StyleUtils.drawAndClipPadding(blockBound, renderAppend, padding)
       })
 
     } else {
       paint.color = backgroundColor
 
-      drawAndClipRect(bound, canvas, {
-        canvas.drawRect(it, paint)
-        StyleUtils.drawAndClipPadding(it, renderAppend, padding)
+      StyleUtils.drawAndClipBound(blockBound, canvas, {
+        canvas.drawRect(blockBound, paint)
+        StyleUtils.drawAndClipPadding(blockBound, renderAppend, padding)
       })
     }
   }
 
   /**
-   * Draw text.
+   * Draw round rect.
    *
-   * @param bound bound.
+   * @param blockBound block bound.
    * @param canvas canvas.
-   * @param paint text paint.
+   * @param backgroundColor background color.
+   * @param radius radius.
+   * @param paint block paint.
    * @param renderAppend render item: fun(blockBound: Rect).
    */
-  fun drawRoundRect(bound: Rect, canvas: Canvas, paint: Paint? = null, renderAppend: ((Rect) -> Unit)? = null) {
-    val backgroundColor = this.backgroundColor
-
-    if (backgroundColor == Color.TRANSPARENT) {
-      // always run render append, even if background is not required to render.
-      if (renderAppend != null) {
-        drawAndClipRect(bound, canvas, {
-          StyleUtils.drawAndClipPadding(it, renderAppend, padding)
-        })
-      }
-      return
-    }
-
-    // draw round rect
+  private fun drawRoundRect(blockBound: Rect, canvas: Canvas, backgroundColor: Int, radius: Float, paint: Paint? = null, renderAppend: ((Rect) -> Unit)? = null) {
     val colorPaint = paint ?: PaintPool.obtainFillPaint()
     colorPaint.color = backgroundColor
     colorPaint.isDither = true
     colorPaint.isAntiAlias = true
 
-    drawAndClipRectF(bound, canvas, {
-      canvas.drawRoundRect(it, radius, radius, colorPaint)
-    }, renderAppend = {
-      StyleUtils.drawAndClipPadding(it, renderAppend, padding)
+    StyleUtils.drawAndClipBound(blockBound, canvas, {
+      val blockBoundRectF = RectFPool.obtainCopy(blockBound)
+
+      canvas.drawRoundRect(blockBoundRectF, radius, radius, colorPaint)
+      StyleUtils.drawAndClipPadding(blockBound, renderAppend, padding)
+
+      RectFPool.release(blockBoundRectF)
     })
-
-    if (paint == null) {
-      PaintPool.release(colorPaint)
-    }
-  }
-
-  /**
-   * Draw text.
-   *
-   * @param bound bound.
-   * @param canvas canvas.
-   * @param paint text paint.
-   * @param renderAppend render item: fun(blockBound: Rect).
-   */
-  fun drawBackgroundAuto(bound: Rect, canvas: Canvas, paint: Paint? = null, renderAppend: ((Rect) -> Unit)? = null) {
-    if (radius == 0F) {
-      drawColor(bound, canvas, paint, renderAppend)
-    } else {
-      drawRoundRect(bound, canvas, paint, renderAppend)
-    }
+    PaintPool.checkNullRelease(paint, colorPaint)
   }
 }

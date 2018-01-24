@@ -45,6 +45,24 @@ open class InstancePool<T> internal constructor(
   }
 
   /**
+   * Check release.
+   */
+  fun checkRelease(required: Boolean, instance: T) {
+    if (required) {
+      release(instance)
+    }
+  }
+
+  /**
+   * Release instance if check object is null.
+   */
+  fun checkNullRelease(obj: Any?, instance: T) {
+    if (obj == null) {
+      release(instance)
+    }
+  }
+
+  /**
    * Release element.
    *
    * @param instance instance.

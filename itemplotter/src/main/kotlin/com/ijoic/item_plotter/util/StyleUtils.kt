@@ -32,6 +32,9 @@ import com.ijoic.item_plotter.style.dimen.RoundDimen
  * @version 1.0
  */
 object StyleUtils {
+
+  /* Block */
+
   /**
    * Measure block rect.
    *
@@ -64,7 +67,7 @@ object StyleUtils {
     } else {
       blockLeft = when {
         isCenterHorizontal(gravity) -> bound.left + ((bound.width().toFloat() - realWidth.toFloat() + 0.5F).toInt() shr 1)
-        containsFlag(gravity, Gravity.END) -> bound.right - realWidth - margin.right
+        isAlignEnd(gravity) -> bound.right - realWidth - margin.right
         else -> bound.left + margin.left
       }
       blockRight = blockLeft + realWidth
@@ -80,7 +83,7 @@ object StyleUtils {
     } else {
       blockBottom = when {
         isCenterVertical(gravity) -> bound.top + ((bound.height().toFloat() + realHeight.toFloat() + 0.5F).toInt() shr 1)
-        containsFlag(gravity, Gravity.BOTTOM) -> bound.bottom - margin.bottom
+        isAlignBottom(gravity) -> bound.bottom - margin.bottom
         else -> bound.top + realHeight + margin.top
       }
       blockTop = blockBottom - realHeight
@@ -99,6 +102,104 @@ object StyleUtils {
   fun measureBlock(bound: Rect, style: BlockStyle, outRect: Rect) {
     measureBlock(bound, style, style.width, style.height, outRect)
   }
+
+  /**
+   * Trim block.
+   *
+   * @param bound bound.
+   * @param blockBound block bound.
+   */
+  fun trimBlock(bound: Rect, blockBound: Rect) {
+    trimBlockHorizontal(bound, blockBound)
+    trimBlockVertical(bound, blockBound)
+  }
+
+  /**
+   * Trim block horizontal.
+   *
+   * @param bound bound.
+   * @param blockBound block bound.
+   */
+  fun trimBlockHorizontal(bound: Rect, blockBound: Rect) {
+    blockBound.apply {
+      left = Math.max(bound.left, left)
+      right = Math.min(bound.right, right)
+    }
+  }
+
+  /**
+   * Trim block vertical.
+   *
+   * @param bound bound.
+   * @param blockBound block bound.
+   */
+  fun trimBlockVertical(bound: Rect, blockBound: Rect) {
+    blockBound.apply {
+      top = Math.max(bound.top, top)
+      bottom = Math.min(bound.bottom, bottom)
+    }
+  }
+
+  /**
+   * Extend block.
+   *
+   * @param blockBound block bound.
+   * @param gravity gravity.
+   * @param width extend width.
+   * @param height extend height.
+   */
+  fun extendBlock(blockBound: Rect, gravity: Int, width: Int, height: Int) {
+    extendBlockHorizontal(blockBound, gravity, width)
+    extendBlockVertical(blockBound, gravity, height)
+  }
+
+  /**
+   * Extend block horizontal.
+   *
+   * @param blockBound block bound.
+   * @param gravity gravity.
+   * @param width extend width.
+   */
+  fun extendBlockHorizontal(blockBound: Rect, gravity: Int, width: Int) {
+    if (width == 0) {
+      return
+    }
+    val halfWidth = (width + 0.5F).toInt() shr 1
+
+    when {
+      isCenterHorizontal(gravity) -> {
+        blockBound.left -= halfWidth
+        blockBound.right = blockBound.right - halfWidth + width
+      }
+      isAlignEnd(gravity) -> blockBound.left -= width
+      else -> blockBound.right += width
+    }
+  }
+
+  /**
+   * Extend block vertical.
+   *
+   * @param blockBound block bound.
+   * @param gravity gravity.
+   * @param height extend height.
+   */
+  fun extendBlockVertical(blockBound: Rect, gravity: Int, height: Int) {
+    if (height == 0) {
+      return
+    }
+    val halfHeight = (height + 0.5F).toInt() shr 1
+
+    when {
+      isCenterVertical(gravity) -> {
+        blockBound.top -= halfHeight
+        blockBound.bottom = blockBound.bottom - halfHeight + height
+      }
+      isAlignBottom(gravity) -> blockBound.top -= height
+      else -> blockBound.bottom += height
+    }
+  }
+
+  /* Render */
 
   /**
    * Draw contents with clip rect.
@@ -139,6 +240,52 @@ object StyleUtils {
     }
   }
 
+  /* GravityHorizontal */
+
+  /**
+   * Returns center horizontal status.
+   *
+   * @param gravity gravity.
+   */
+  fun isCenterHorizontal(gravity: Int) = (gravity and Gravity.HORIZONTAL_GRAVITY_MASK) == Gravity.CENTER_HORIZONTAL
+
+  /**
+   * Returns align start status.
+   *
+   * @param gravity gravity.
+   */
+  fun isAlignStart(gravity: Int) = containsFlag(gravity, Gravity.START)
+
+  /**
+   * Returns align end status.
+   *
+   * @param gravity gravity.
+   */
+  fun isAlignEnd(gravity: Int) = containsFlag(gravity, Gravity.END)
+
+  /* GravityVertical */
+
+  /**
+   * Returns center vertical status.
+   *
+   * @param gravity gravity.
+   */
+  fun isCenterVertical(gravity: Int) = (gravity and Gravity.VERTICAL_GRAVITY_MASK) == Gravity.CENTER_VERTICAL
+
+  /**
+   * Returns align top status.
+   *
+   * @param gravity gravity.
+   */
+  fun isAlignTop(gravity: Int) = containsFlag(gravity, Gravity.TOP)
+
+  /**
+   * Returns align bottom status.
+   *
+   * @param gravity gravity.
+   */
+  fun isAlignBottom(gravity: Int) = containsFlag(gravity, Gravity.BOTTOM)
+
   /**
    * Returns binary flag contains status.
    *
@@ -146,18 +293,4 @@ object StyleUtils {
    * @param flag flag.
    */
   private fun containsFlag(src: Int, flag: Int) = (src and flag) == flag
-
-  /**
-   * Returns center horizontal status.
-   *
-   * @param gravity gravity.
-   */
-  private fun isCenterHorizontal(gravity: Int) = (gravity and Gravity.HORIZONTAL_GRAVITY_MASK) == Gravity.CENTER_HORIZONTAL
-
-  /**
-   * Returns center vertical status.
-   *
-   * @param gravity gravity.
-   */
-  private fun isCenterVertical(gravity: Int) = (gravity and Gravity.VERTICAL_GRAVITY_MASK) == Gravity.CENTER_VERTICAL
 }

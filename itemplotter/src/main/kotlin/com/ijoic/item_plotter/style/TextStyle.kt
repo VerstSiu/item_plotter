@@ -56,11 +56,55 @@ class TextStyle: PlotterStyle() {
    * @param clipPadding clip padding content or not.
    */
   fun drawText(bound: Rect, canvas: Canvas, text: String?, paint: Paint? = null, renderAppend: ((Rect) -> Unit)? = null, clipPadding: Boolean = false) {
+    val textPaint = paint ?: PaintPool.obtainSmoothFillPaint()
+    val textBound = RectPool.obtain()
+
+    measureTextBound(text, textBound, paint)
+    drawTextWithTextBound(bound, canvas, text, textBound, paint, renderAppend, clipPadding)
+
+    PaintPool.checkNullRelease(paint, textPaint)
+    RectPool.release(textBound)
+  }
+
+  /**
+   * Measure text bound.
+   *
+   * @param text text.
+   * @param textBound text bound.
+   * @param paint text paint.
+   */
+  fun measureTextBound(text: String?, textBound: Rect, paint: Paint? = null) {
+    if (text == null || text.isEmpty()) {
+      textBound.setEmpty()
+      return
+    }
+    val textPaint = paint ?: PaintPool.obtainSmoothFillPaint()
+
+    textPaint.textAlign = Paint.Align.LEFT
+    textPaint.textSize = textSize
+    textPaint.typeface = typeface
+    textPaint.getTextBounds(text, 0, text.length, textBound)
+
+    PaintPool.checkNullRelease(paint, textPaint)
+  }
+
+  /**
+   * Draw text wit text bound.
+   *
+   * @param bound bound.
+   * @param canvas canvas.
+   * @param text text.
+   * @param textBound text bound.
+   * @param paint text paint.
+   * @param renderAppend render append: fun(textBound: Rect).
+   * @param clipPadding clip padding content or not.
+   */
+  fun drawTextWithTextBound(bound: Rect, canvas: Canvas, text: String?, textBound: Rect, paint: Paint? = null, renderAppend: ((Rect) -> Unit)? = null, clipPadding: Boolean = false) {
     val textColor = this.textColor
     val baseWidth = padding.left + padding.right
     val baseHeight = padding.top + padding.bottom
 
-    if (text == null || text.isEmpty() || textColor == Color.TRANSPARENT) {
+    if (text == null || text.isEmpty() || textBound.isEmpty || textColor == Color.TRANSPARENT) {
       // always run render append, even if background is not required to render.
       if (renderAppend != null) {
         val blockRect = RectPool.obtain()
@@ -71,20 +115,16 @@ class TextStyle: PlotterStyle() {
       return
     }
     val textPaint = paint ?: PaintPool.obtainSmoothFillPaint()
+    textPaint.textAlign = Paint.Align.LEFT
     textPaint.color = textColor
     textPaint.textSize = textSize
     textPaint.typeface = typeface
 
     // draw text.
-    val measureRect = RectPool.obtain()
-    textPaint.textAlign = Paint.Align.LEFT
-    textPaint.getTextBounds(text, 0, text.length, measureRect)
-
-    val textInitLeft = -measureRect.left
-    val textInitTop = -measureRect.bottom
-    val textWidth = measureRect.width() + baseWidth
-    val textHeight = measureRect.height() + baseHeight
-    RectPool.release(measureRect)
+    val textInitLeft = -textBound.left
+    val textInitTop = -textBound.bottom
+    val textWidth = textBound.width() + baseWidth
+    val textHeight = textBound.height() + baseHeight
 
     val blockRect = RectPool.obtain()
     StyleUtils.measureBlock(bound, this, textWidth, textHeight, blockRect)
@@ -106,9 +146,6 @@ class TextStyle: PlotterStyle() {
     renderAppend?.invoke(blockRect)
     RectPool.release(blockRect)
 
-    if (paint == null) {
-      PaintPool.release(textPaint)
-    }
+    PaintPool.checkNullRelease(paint, textPaint)
   }
-
 }

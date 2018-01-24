@@ -21,8 +21,7 @@ import android.graphics.Canvas
 import android.graphics.Rect
 import com.ijoic.item_plotter.ItemData
 import com.ijoic.item_plotter.Plotter
-import com.ijoic.item_plotter.style.BlockStyle
-import com.ijoic.item_plotter.style.TextStyle
+import com.ijoic.item_plotter.style.BlockTextStyle
 
 /**
  * Block text plotter.
@@ -39,25 +38,18 @@ open class BlockTextPlotter : Plotter() {
   var text: String? = null
 
   /**
-   * Text style.
-   */
-  val textStyle = TextStyle()
-
-  /**
    * Block style.
    */
-  val blockStyle = BlockStyle()
+  val blockTextStyle = BlockTextStyle()
 
-  override fun measureMinWidth() = appendExpectedMinWidth(super.measureMinWidth(), textStyle, blockStyle)
+  override fun measureMinWidth() = appendExpectedMinWidth(super.measureMinWidth(), blockTextStyle)
 
-  override fun measureMinHeight() = appendExpectedMinHeight(super.measureMinHeight(), textStyle, blockStyle)
+  override fun measureMinHeight() = appendExpectedMinHeight(super.measureMinHeight(), blockTextStyle)
 
   /* Draw */
 
   override fun onDraw(bound: Rect, canvas: Canvas, itemData: ItemData?) {
     // draw text inside rect bound.
-    blockStyle.drawRoundRect(bound, canvas, renderAppend = {
-      textStyle.drawText(it, canvas, getBindString(itemData, unbindReplace = this.text))
-    })
+    blockTextStyle.drawBlockWithText(bound, canvas, getBindString(itemData, unbindReplace = this.text))
   }
 }

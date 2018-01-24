@@ -468,7 +468,7 @@ abstract class Plotter {
     val bound = RectPool.obtain()
     bound.set(left, top, left + width, top + height)
 
-    backgroundStyle.drawBackgroundAuto(bound, canvas, renderAppend = {
+    backgroundStyle.drawBackground(bound, canvas, renderAppend = {
       onDraw(it, canvas, itemData)
     })
 

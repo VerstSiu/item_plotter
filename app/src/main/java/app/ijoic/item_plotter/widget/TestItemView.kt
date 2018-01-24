@@ -51,23 +51,24 @@ class TestItemView(context: Context, attrs: AttributeSet? = null): ItemView(cont
             isTouchEnabled = true
 
             text = "Hello World"
-            textStyle.apply {
-              padding.setAll(20)
-              gravity = Gravity.END or Gravity.BOTTOM
-              textColor = 0xFF333333.toInt()
-              textSize = 48F
-            }
             backgroundStyle.apply {
               padding.setAll(20)
               backgroundColor = 0xffd0d0d0.toInt()
             }
 
-            blockStyle.apply {
+            blockTextStyle.apply {
               width = ViewGroup.LayoutParams.MATCH_PARENT
               height = ViewGroup.LayoutParams.MATCH_PARENT
               padding.setAll(20)
               backgroundColor = Color.GREEN
               radius = 20F
+
+              textStyle.apply {
+                padding.setAll(20)
+                gravity = Gravity.END or Gravity.BOTTOM
+                textColor = 0xFF333333.toInt()
+                textSize = 48F
+              }
             }
           },
           LinearLayout.LayoutParams(

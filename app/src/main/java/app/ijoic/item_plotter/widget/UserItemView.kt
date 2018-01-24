@@ -44,22 +44,23 @@ class UserItemView(context: Context, attrs: AttributeSet? = null): ItemView(cont
           BlockTextPlotter().apply {
             bindKey = "user_index"
 
-            textStyle.apply {
-              gravity = Gravity.CENTER
-              textColor = Color.WHITE
-              textSize = 48F
-            }
             backgroundStyle.apply {
               padding.setAll(20)
               backgroundColor = 0xFFF5F5F5.toInt()
             }
 
-            blockStyle.apply {
+            blockTextStyle.apply {
               width = 96
               height = 96
               gravity = Gravity.CENTER
               backgroundColor = 0xFFFF9800.toInt()
               radius = 20F
+
+              textStyle.apply {
+                gravity = Gravity.CENTER
+                textColor = Color.WHITE
+                textSize = 48F
+              }
             }
           },
           LinearLayout.LayoutParams(
