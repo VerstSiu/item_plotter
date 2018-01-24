@@ -123,16 +123,18 @@ class TextStyle: PlotterStyle() {
     // draw text.
     val textInitLeft = -textBound.left
     val textInitTop = -textBound.bottom
+    val fillHeight = Math.max(textSize.toInt() - textBound.height(), 0)
     val textWidth = textBound.width() + baseWidth
-    val textHeight = textBound.height() + baseHeight
+    val textHeight = textBound.height() + baseHeight + fillHeight
 
     val blockRect = RectPool.obtain()
     StyleUtils.measureBlock(bound, this, textWidth, textHeight, blockRect)
 
     // draw text
     StyleUtils.drawAndClipPadding(blockRect, {
+      val fillHeightHalf = if (fillHeight == 0) 0 else ((fillHeight + 0.5F).toInt() shr 1)
       val textLeft = textInitLeft + it.left
-      val textBottom = textInitTop + it.bottom
+      val textBottom = textInitTop + it.bottom + fillHeightHalf
 
       if (clipPadding) {
         StyleUtils.drawAndClipBound(it, canvas, {
