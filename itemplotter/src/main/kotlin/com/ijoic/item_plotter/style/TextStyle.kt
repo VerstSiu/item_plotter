@@ -91,6 +91,8 @@ class TextStyle: PlotterStyle() {
   /**
    * Draw text wit text bound.
    *
+   * <p>Draw text content align text size height center.</p>
+   *
    * @param bound bound.
    * @param canvas canvas.
    * @param text text.
@@ -137,7 +139,7 @@ class TextStyle: PlotterStyle() {
     // draw text
     StyleUtils.drawAndClipPadding(blockRect, {
       val textLeft = textInitLeft + it.left
-      val textBottom = textInitTop + it.bottom + StyleUtils.measureHalfInt(it.height() - textBound.height())
+      val textBottom = textInitTop + it.bottom - StyleUtils.measureHalfInt(it.height() - textBound.height())
 
       if (clipPadding) {
         StyleUtils.drawAndClipBound(it, canvas, {

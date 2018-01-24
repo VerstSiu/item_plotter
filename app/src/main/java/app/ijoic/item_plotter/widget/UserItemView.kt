@@ -42,7 +42,8 @@ class UserItemView(context: Context, attrs: AttributeSet? = null): ItemView(cont
     private val plotterImpl = LinearPlotterGroup().apply {
       addPlotter(
           BlockTextPlotter().apply {
-            bindKey = "user_index"
+//            bindKey = "user_index"
+            text = "-"
 
             backgroundStyle.apply {
               padding.setAll(20)
@@ -58,7 +59,10 @@ class UserItemView(context: Context, attrs: AttributeSet? = null): ItemView(cont
               radius = 20F
 
               textStyle.apply {
-                gravity = Gravity.CENTER
+                padding.bottom = 10
+                padding.right = 10
+//                gravity = Gravity.CENTER
+                gravity = Gravity.END or Gravity.BOTTOM
                 textColor = Color.WHITE
                 textSize = 48F
               }
