@@ -26,7 +26,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.ijoic.item_plotter.style.BlockStyle
 import com.ijoic.item_plotter.style.PlotterStyle
-import com.ijoic.item_plotter.util.RectPool
+import com.ijoic.item_plotter.util.pool.RectPool
 
 /**
  * Plotter.

@@ -15,7 +15,7 @@
  *  limitations under the License.
  *
  */
-package com.ijoic.item_plotter.util
+package com.ijoic.item_plotter.util.pool
 
 import android.support.v4.util.Pools
 

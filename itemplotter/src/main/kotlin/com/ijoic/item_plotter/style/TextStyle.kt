@@ -18,8 +18,9 @@
 package com.ijoic.item_plotter.style
 
 import android.graphics.*
-import com.ijoic.item_plotter.util.PaintPool
-import com.ijoic.item_plotter.util.RectPool
+import com.ijoic.item_plotter.util.MeasureUtils
+import com.ijoic.item_plotter.util.pool.PaintPool
+import com.ijoic.item_plotter.util.pool.RectPool
 import com.ijoic.item_plotter.util.StyleUtils
 
 /**
@@ -134,12 +135,12 @@ class TextStyle: PlotterStyle() {
     StyleUtils.measureBlock(bound, this, textWidth, textHeight, blockRect)
 
     val extraHeight = Math.max(textSizeInt - textBound.height(), 0)
-    val extraHeightHalf = if (extraHeight == 0) 0 else StyleUtils.measureHalfInt(extraHeight)
+    val extraHeightHalf = if (extraHeight == 0) 0 else MeasureUtils.getHalfInt(extraHeight)
 
     // draw text
     StyleUtils.drawAndClipPadding(blockRect, {
       val textLeft = textInitLeft + it.left
-      val textBottom = textInitTop + it.bottom - StyleUtils.measureHalfInt(it.height() - textBound.height())
+      val textBottom = textInitTop + it.bottom - MeasureUtils.getHalfInt(it.height() - textBound.height())
 
       if (clipPadding) {
         StyleUtils.drawAndClipBound(it, canvas, {

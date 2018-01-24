@@ -72,9 +72,8 @@ class TestItemView(context: Context, attrs: AttributeSet? = null): ItemView(cont
             }
           },
           LinearLayout.LayoutParams(
-              0,
-              ViewGroup.LayoutParams.MATCH_PARENT,
-              1F
+              300,
+              ViewGroup.LayoutParams.MATCH_PARENT
           )
       )
     }

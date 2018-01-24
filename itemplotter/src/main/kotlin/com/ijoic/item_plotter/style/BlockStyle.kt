@@ -19,9 +19,9 @@ package com.ijoic.item_plotter.style
 
 import android.graphics.*
 import android.view.ViewGroup
-import com.ijoic.item_plotter.util.PaintPool
-import com.ijoic.item_plotter.util.RectFPool
-import com.ijoic.item_plotter.util.RectPool
+import com.ijoic.item_plotter.util.pool.PaintPool
+import com.ijoic.item_plotter.util.pool.RectFPool
+import com.ijoic.item_plotter.util.pool.RectPool
 import com.ijoic.item_plotter.util.StyleUtils
 
 /**

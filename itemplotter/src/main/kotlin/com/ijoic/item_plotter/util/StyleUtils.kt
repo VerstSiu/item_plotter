@@ -24,6 +24,7 @@ import android.view.ViewGroup
 import com.ijoic.item_plotter.style.PlotterStyle
 import com.ijoic.item_plotter.style.BlockStyle
 import com.ijoic.item_plotter.style.dimen.RoundDimen
+import com.ijoic.item_plotter.util.pool.RectPool
 
 /**
  * Style utils.
@@ -345,12 +346,4 @@ object StyleUtils {
    */
   private fun containsFlag(src: Int, flag: Int) = (src and flag) == flag
 
-  /* Math */
-
-  /**
-   * Measure half int.
-   *
-   * @param value int value.
-   */
-  fun measureHalfInt(value: Int) = ((value.toFloat() + 0.5F).toInt() shr 1)
 }

@@ -18,8 +18,8 @@
 package com.ijoic.item_plotter.style
 
 import android.graphics.*
-import com.ijoic.item_plotter.util.PaintPool
-import com.ijoic.item_plotter.util.RectPool
+import com.ijoic.item_plotter.util.pool.PaintPool
+import com.ijoic.item_plotter.util.pool.RectPool
 import com.ijoic.item_plotter.util.StyleUtils
 
 /**

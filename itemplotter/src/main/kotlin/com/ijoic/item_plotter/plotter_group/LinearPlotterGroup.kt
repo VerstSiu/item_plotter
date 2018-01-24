@@ -23,6 +23,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.ijoic.item_plotter.PlotterGroup
 import com.ijoic.item_plotter.ItemData
+import com.ijoic.item_plotter.util.MeasureUtils
 
 /**
  * Linear plotter group.
@@ -77,6 +78,9 @@ open class LinearPlotterGroup(orientation: Int = HORIZONTAL): PlotterGroup<Linea
     var childWeight: Float
     var childParamWidth: Int?
 
+    val childWidthMeasureSpec = MeasureUtils.exactly2atMost(widthMeasureSpec)
+    val childHeightMeasureSpec = MeasureUtils.exactly2atMost(heightMeasureSpec)
+
     // measure child items which's weight is negative or zero.
     plotterItems.forEach {
       childParams = getChildLayoutParams(it)
@@ -86,7 +90,7 @@ open class LinearPlotterGroup(orientation: Int = HORIZONTAL): PlotterGroup<Linea
         childWeight = Math.max(childParams?.weight ?: 0F, 0F)
         weightTotal += childWeight
       } else {
-        it.measure(resChanged, widthMeasureSpec, heightMeasureSpec)
+        it.measure(resChanged, childWidthMeasureSpec, childHeightMeasureSpec)
         totalWidth += it.measuredWidth
         totalHeight = Math.max(totalHeight, it.measuredHeight)
       }
@@ -108,7 +112,7 @@ open class LinearPlotterGroup(orientation: Int = HORIZONTAL): PlotterGroup<Linea
           childWeightWidth = (weightWidthTotal * childWeight / weightTotal).toInt()
           totalWidth += childWeightWidth
 
-          it.measure(resChanged, widthMeasureSpec, heightMeasureSpec)
+          it.measure(resChanged, childWidthMeasureSpec, childHeightMeasureSpec)
           it.setMeasureDimension(childWeightWidth, it.measuredHeight)
           totalHeight = Math.max(totalHeight, it.measuredHeight)
         }
@@ -135,6 +139,9 @@ open class LinearPlotterGroup(orientation: Int = HORIZONTAL): PlotterGroup<Linea
     var childWeight: Float
     var childParamHeight: Int?
 
+    val childWidthMeasureSpec = MeasureUtils.exactly2atMost(widthMeasureSpec)
+    val childHeightMeasureSpec = MeasureUtils.exactly2atMost(heightMeasureSpec)
+
     // measure child items which's weight is negative or zero.
     plotterItems.forEach {
       childParams = getChildLayoutParams(it)
@@ -144,7 +151,7 @@ open class LinearPlotterGroup(orientation: Int = HORIZONTAL): PlotterGroup<Linea
         childWeight = Math.max(childParams?.weight ?: 0F, 0F)
         weightTotal += childWeight
       } else {
-        it.measure(resChanged, widthMeasureSpec, heightMeasureSpec)
+        it.measure(resChanged, childWidthMeasureSpec, childHeightMeasureSpec)
         totalHeight += it.measuredHeight
         totalWidth = Math.max(totalWidth, it.measuredWidth)
       }
@@ -166,7 +173,7 @@ open class LinearPlotterGroup(orientation: Int = HORIZONTAL): PlotterGroup<Linea
           childWeightHeight = (weightHeightTotal * childWeight / weightTotal).toInt()
           totalHeight += childWeightHeight
 
-          it.measure(resChanged, widthMeasureSpec, heightMeasureSpec)
+          it.measure(resChanged, childWidthMeasureSpec, childHeightMeasureSpec)
           it.setMeasureDimension(it.measuredWidth, childWeightHeight)
           totalWidth = Math.max(totalWidth, it.measuredWidth)
         }

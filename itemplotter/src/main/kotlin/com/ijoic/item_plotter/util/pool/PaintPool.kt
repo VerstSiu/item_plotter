@@ -15,10 +15,9 @@
  *  limitations under the License.
  *
  */
-package com.ijoic.item_plotter.util
+package com.ijoic.item_plotter.util.pool
 
-import android.graphics.Rect
-import android.graphics.RectF
+import android.graphics.Paint
 
 /**
  * RectF pool.
@@ -26,18 +25,38 @@ import android.graphics.RectF
  * @author xiao.yl on 2018/1/20.
  * @version 1.0
  */
-object RectFPool: InstancePool<RectF>({ RectF() }) {
-  override fun onReleaseElement(instance: RectF) {
-    instance.setEmpty()
+object PaintPool : InstancePool<Paint>({ Paint() }) {
+  override fun onReleaseElement(instance: Paint) {
+    instance.reset()
   }
 
   /**
-   * Obtain rectF instance and copy with src rect value.
+   * Returns fill paint.
    */
-  fun obtainCopy(src: Rect) = obtain().apply { set(src) }
+  fun obtainFillPaint() = obtain().apply {
+    style = Paint.Style.FILL
+  }
 
   /**
-   * Obtain rectF instance and copy with src rectF value.
+   * Returns smooth fill paint.
    */
-  fun obtainCopy(src: RectF) = obtain().apply { set(src) }
+  fun obtainSmoothFillPaint() = obtainFillPaint().apply {
+    isDither = true
+    isAntiAlias = true
+  }
+
+  /**
+   * Returns stroke paint.
+   */
+  fun obtainStrokePaint() = obtain().apply {
+    style = Paint.Style.STROKE
+  }
+
+  /**
+   * Returns smooth stroke paint.
+   */
+  fun obtainSmoothStrokePaint() = obtainStrokePaint().apply {
+    isDither = true
+    isAntiAlias = true
+  }
 }

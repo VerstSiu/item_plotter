@@ -15,18 +15,23 @@
  *  limitations under the License.
  *
  */
-package com.ijoic.item_plotter.util
+package com.ijoic.item_plotter.util.pool
 
-import android.graphics.Path
+import android.graphics.Rect
 
 /**
- * Path pool.
+ * Rect pool.
  *
  * @author xiao.yl on 2018/1/20.
  * @version 1.0
  */
-object PathPool : InstancePool<Path>({ Path() }) {
-  override fun onReleaseElement(instance: Path) {
-    instance.reset()
+object RectPool: InstancePool<Rect>({ Rect() }) {
+  override fun onReleaseElement(instance: Rect) {
+    instance.setEmpty()
   }
+
+  /**
+   * Obtain rect instance and copy with src rect value.
+   */
+  fun obtainCopy(src: Rect) = obtain().apply { set(src) }
 }

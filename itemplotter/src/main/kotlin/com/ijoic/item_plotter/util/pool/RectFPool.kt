@@ -15,23 +15,29 @@
  *  limitations under the License.
  *
  */
-package com.ijoic.item_plotter.util
+package com.ijoic.item_plotter.util.pool
 
 import android.graphics.Rect
+import android.graphics.RectF
 
 /**
- * Rect pool.
+ * RectF pool.
  *
  * @author xiao.yl on 2018/1/20.
  * @version 1.0
  */
-object RectPool: InstancePool<Rect>({ Rect() }) {
-  override fun onReleaseElement(instance: Rect) {
+object RectFPool: InstancePool<RectF>({ RectF() }) {
+  override fun onReleaseElement(instance: RectF) {
     instance.setEmpty()
   }
 
   /**
-   * Obtain rect instance and copy with src rect value.
+   * Obtain rectF instance and copy with src rect value.
    */
   fun obtainCopy(src: Rect) = obtain().apply { set(src) }
+
+  /**
+   * Obtain rectF instance and copy with src rectF value.
+   */
+  fun obtainCopy(src: RectF) = obtain().apply { set(src) }
 }
