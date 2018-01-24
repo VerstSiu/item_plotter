@@ -35,7 +35,7 @@ class TestAdapter(context: Context): RecyclerView.Adapter<SimpleChildHolder<User
       return
     }
     holder.childView.dataImpl.apply {
-      stringReaderImpl.loadInstance().simple.putValue("user_index", (position + 1).toString())
+      stringReaderImpl.loadInstance().simple.putValue("user_index", (position + 10001).toString())
       item = itemsData?.elementAtOrNull(position)
     }
     holder.childView.invalidate()

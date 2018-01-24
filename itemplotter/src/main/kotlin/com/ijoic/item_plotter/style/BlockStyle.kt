@@ -73,7 +73,7 @@ open class BlockStyle: PlotterStyle() {
   }
 
   /**
-   * Draw background direct..
+   * Draw background direct.
    *
    * @param blockBound block bound.
    * @param canvas canvas.

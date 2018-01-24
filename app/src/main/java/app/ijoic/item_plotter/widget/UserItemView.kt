@@ -53,6 +53,7 @@ class UserItemView(context: Context, attrs: AttributeSet? = null): ItemView(cont
               width = 96
               height = 96
               gravity = Gravity.CENTER
+              padding.setHorizontal(20)
               backgroundColor = 0xFFFF9800.toInt()
               radius = 20F
 

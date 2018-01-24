@@ -132,7 +132,7 @@ class RoundDimen {
   fun trimBound(bound: Rect) {
     bound.apply {
       left += this@RoundDimen.left
-      top += this@RoundDimen.left
+      top += this@RoundDimen.top
       right -= this@RoundDimen.right
       bottom -= this@RoundDimen.bottom
     }

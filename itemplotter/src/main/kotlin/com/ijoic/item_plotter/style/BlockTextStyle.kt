@@ -97,8 +97,17 @@ class BlockTextStyle : BlockStyle() {
     }
     val minRequiredTextWidth = textBound.width() + padding.minRequiredWidth
     val minRequiredTextHeight = textBound.height() + padding.minRequiredHeight
+    val blockWidth = blockBound.width()
+    val blockHeight = blockBound.height()
 
-    StyleUtils.extendBlock(blockBound, gravity, minRequiredTextWidth, minRequiredTextHeight)
-    StyleUtils.trimBlock(bound, blockBound)
+    if (minRequiredTextWidth > blockWidth) {
+      StyleUtils.extendBlockHorizontal(blockBound, gravity, minRequiredTextWidth - blockWidth)
+      StyleUtils.trimBlockHorizontal(bound, blockBound)
+    }
+
+    if (minRequiredTextHeight > blockHeight) {
+      StyleUtils.extendBlockVertical(blockBound, gravity, minRequiredTextHeight - blockHeight)
+      StyleUtils.trimBlockVertical(bound, blockBound)
+    }
   }
 }
