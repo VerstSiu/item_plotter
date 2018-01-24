@@ -199,6 +199,46 @@ object StyleUtils {
     }
   }
 
+  /**
+   * Align horizontal with src bound as much as possible.
+   *
+   * <p>This method will not change the top and bottom property of outBound.</p>
+   * <p>This method assume that srcBound is inside bound.</p>
+   *
+   * @param bound bound.
+   * @param srcBound src bound.
+   * @param outBound out bound.
+   */
+  fun alignHorizontal(bound: Rect, srcBound: Rect, outBound: Rect) {
+    outBound.left = srcBound.left
+    outBound.right = srcBound.right
+    val extendHalf = Math.min(bound.right - srcBound.right, srcBound.left - bound.left)
+
+    if (extendHalf > 0) {
+      extendBlockHorizontal(outBound, Gravity.CENTER_HORIZONTAL, extendHalf shl 1)
+    }
+  }
+
+  /**
+   * Align vertical with src bound as much as possible.
+   *
+   * <p>This method will not change the left and right property of outBound.</p>
+   * <p>This method assume that srcBound is inside bound.</p>
+   *
+   * @param bound bound.
+   * @param srcBound src bound.
+   * @param outBound out bound.
+   */
+  fun alignVertical(bound: Rect, srcBound: Rect, outBound: Rect) {
+    outBound.top = srcBound.top
+    outBound.bottom = srcBound.bottom
+    val extendHalf = Math.min(bound.bottom - srcBound.bottom, srcBound.top - bound.top)
+
+    if (srcBound.top > bound.top) {
+      extendBlockVertical(outBound, Gravity.CENTER_VERTICAL, extendHalf shl 1)
+    }
+  }
+
   /* Render */
 
   /**
