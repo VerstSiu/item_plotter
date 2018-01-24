@@ -103,6 +103,8 @@ class TextStyle: PlotterStyle() {
     val textColor = this.textColor
     val baseWidth = padding.left + padding.right
     val baseHeight = padding.top + padding.bottom
+    val textSize = this.textSize
+    val textSizeInt = textSize.toInt()
 
     if (text == null || text.isEmpty() || textBound.isEmpty || textColor == Color.TRANSPARENT) {
       // always run render append, even if background is not required to render.
@@ -123,18 +125,19 @@ class TextStyle: PlotterStyle() {
     // draw text.
     val textInitLeft = -textBound.left
     val textInitTop = -textBound.bottom
-    val fillHeight = Math.max(textSize.toInt() - textBound.height(), 0)
     val textWidth = textBound.width() + baseWidth
-    val textHeight = textBound.height() + baseHeight + fillHeight
+    val textHeight = textSizeInt + baseHeight
 
     val blockRect = RectPool.obtain()
     StyleUtils.measureBlock(bound, this, textWidth, textHeight, blockRect)
 
+    val extraHeight = Math.max(textSizeInt - textBound.height(), 0)
+    val extraHeightHalf = if (extraHeight == 0) 0 else StyleUtils.measureHalfInt(extraHeight)
+
     // draw text
     StyleUtils.drawAndClipPadding(blockRect, {
-      val fillHeightHalf = if (fillHeight == 0) 0 else ((fillHeight + 0.5F).toInt() shr 1)
       val textLeft = textInitLeft + it.left
-      val textBottom = textInitTop + it.bottom + fillHeightHalf
+      val textBottom = textInitTop + it.bottom + StyleUtils.measureHalfInt(it.height() - textBound.height())
 
       if (clipPadding) {
         StyleUtils.drawAndClipBound(it, canvas, {
@@ -143,7 +146,7 @@ class TextStyle: PlotterStyle() {
       } else {
         canvas.drawText(text, textLeft.toFloat(), textBottom.toFloat(), textPaint)
       }
-    }, padding)
+    }, padding, offsetY = extraHeightHalf)
 
     renderAppend?.invoke(blockRect)
     RectPool.release(blockRect)

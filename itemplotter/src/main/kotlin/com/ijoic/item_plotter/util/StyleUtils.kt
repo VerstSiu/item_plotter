@@ -265,8 +265,10 @@ object StyleUtils {
    * @param bound bound.
    * @param renderItem render item: fun(clipBound: Rect).
    * @param padding padding.
+   * @param offsetX offset x.
+   * @param offsetY offset y.
    */
-  fun drawAndClipPadding(bound: Rect, renderItem: ((Rect) -> Unit)?, padding: RoundDimen) {
+  fun drawAndClipPadding(bound: Rect, renderItem: ((Rect) -> Unit)?, padding: RoundDimen, offsetX: Int = 0, offsetY: Int = 0) {
     if (renderItem == null) {
       return
     }
@@ -274,6 +276,15 @@ object StyleUtils {
       renderItem.invoke(bound)
     } else{
       val clipBound = RectPool.obtainCopy(bound)
+
+      if (offsetX != 0) {
+        clipBound.left -= offsetX
+        clipBound.right += offsetX
+      }
+      if (offsetY != 0) {
+        clipBound.top -= offsetY
+        clipBound.bottom += offsetY
+      }
       padding.trimBound(clipBound)
       renderItem.invoke(clipBound)
       RectPool.release(clipBound)
@@ -333,4 +344,13 @@ object StyleUtils {
    * @param flag flag.
    */
   private fun containsFlag(src: Int, flag: Int) = (src and flag) == flag
+
+  /* Math */
+
+  /**
+   * Measure half int.
+   *
+   * @param value int value.
+   */
+  fun measureHalfInt(value: Int) = ((value.toFloat() + 0.5F).toInt() shr 1)
 }
