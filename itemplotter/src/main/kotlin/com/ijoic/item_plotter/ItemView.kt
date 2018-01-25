@@ -23,6 +23,7 @@ import android.support.annotation.IdRes
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import com.ijoic.item_plotter.source.PlotterPicker
 
 /**
  * Item view.
@@ -44,16 +45,16 @@ open class ItemView(context: Context, attrs: AttributeSet? = null): View(context
    *
    * <p>Use to override and provide plotter instance when item view is attached to window.
    */
-  var plotterProvider: (() -> Plotter?)? = null
+  var plotterPicker: PlotterPicker? = null
 
   /**
    * Returns plotter instance or null if not any plotter instance could be read or created.
    *
    * @see plotter
-   * @see plotterProvider
+   * @see plotterPicker
    */
   private fun readPlotterInstance(): Plotter? {
-    return plotter ?: plotterProvider?.invoke()
+    return plotter ?: plotterPicker?.getDisplayPlotter()
   }
 
   /* ItemData */
@@ -105,7 +106,7 @@ open class ItemView(context: Context, attrs: AttributeSet? = null): View(context
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
     plotter = null
-    plotterProvider = null
+    plotterPicker = null
     itemData = null
     itemDataProvider = null
     itemClickListener = null
@@ -114,15 +115,36 @@ open class ItemView(context: Context, attrs: AttributeSet? = null): View(context
   /* Measure */
 
   override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-    val plotter = readPlotterInstance()
+    val plotter = this.plotter
+    val plotterPicker = this.plotterPicker
 
-    if (plotter != null) {
-      val resChanged = plotter.prepareResource(context)
-      plotter.measure(resChanged, widthMeasureSpec, heightMeasureSpec)
-      setMeasuredDimension(plotter.measuredWidth, plotter.measuredHeight)
-    } else {
-      super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+    when {
+      plotter != null -> {
+        measurePlotterItem(plotter, widthMeasureSpec, heightMeasureSpec)
+        setMeasuredDimension(plotter.measuredWidth, plotter.measuredHeight)
+      }
+      plotterPicker != null -> {
+        // pre measure all related plotters
+        plotterPicker.getPlotterItems().forEach {
+          measurePlotterItem(it, widthMeasureSpec, heightMeasureSpec)
+        }
+
+        // update measure result with display plotter
+        val displayPlotter = plotterPicker.getDisplayPlotter()
+
+        if (displayPlotter != null) {
+          setMeasuredDimension(displayPlotter.measuredWidth, displayPlotter.measuredHeight)
+        } else {
+          super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        }
+      }
+      else -> super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
+  }
+
+  private fun measurePlotterItem(plotter: Plotter, widthMeasureSpec: Int, heightMeasureSpec: Int) {
+    val resChanged = plotter.prepareResource(context)
+    plotter.measure(resChanged, widthMeasureSpec, heightMeasureSpec)
   }
 
   /* TouchEvent */
