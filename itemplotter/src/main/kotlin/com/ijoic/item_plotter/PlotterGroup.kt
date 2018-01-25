@@ -17,7 +17,6 @@
  */
 package com.ijoic.item_plotter
 
-import android.content.Context
 import android.support.annotation.IdRes
 import android.view.ViewGroup
 
@@ -71,20 +70,6 @@ abstract class PlotterGroup<PARAMS: ViewGroup.LayoutParams>: Plotter() {
       plotter.layoutParams = transformLayoutParams(oldParams)
     }
     plotterItems.add(plotter)
-  }
-
-  /* Resources */
-
-  override fun prepareResource(context: Context): Boolean {
-    var resChanged = super.prepareResource(context)
-    val plotterItems = getPlotterItems()
-
-    plotterItems.forEach {
-      if (it.prepareResource(context)) {
-        resChanged = true
-      }
-    }
-    return resChanged
   }
 
   /* Touch */

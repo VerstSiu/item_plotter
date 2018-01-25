@@ -17,6 +17,7 @@
  */
 package com.ijoic.item_plotter.plotter
 
+import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Rect
 import com.ijoic.item_plotter.ItemData
@@ -48,7 +49,7 @@ open class BlockTextPlotter : Plotter() {
 
   /* Draw */
 
-  override fun onDraw(bound: Rect, canvas: Canvas, itemData: ItemData?) {
+  override fun onDraw(context: Context, bound: Rect, canvas: Canvas, itemData: ItemData?) {
     // draw text inside rect bound.
     blockTextStyle.drawBlockWithText(bound, canvas, getBindString(itemData, unbindReplace = this.text))
   }

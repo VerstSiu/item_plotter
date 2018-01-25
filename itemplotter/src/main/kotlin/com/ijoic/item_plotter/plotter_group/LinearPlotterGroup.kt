@@ -17,6 +17,7 @@
  */
 package com.ijoic.item_plotter.plotter_group
 
+import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Rect
 import android.view.ViewGroup
@@ -56,17 +57,17 @@ open class LinearPlotterGroup(orientation: Int = HORIZONTAL): PlotterGroup<Linea
 
   /* Measure */
 
-  override fun measure(resChanged: Boolean, widthMeasureSpec: Int, heightMeasureSpec: Int) {
-    super.measure(resChanged, widthMeasureSpec, heightMeasureSpec)
+  override fun measure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+    super.measure(widthMeasureSpec, heightMeasureSpec)
 
     if (isHorizontal) {
-      performMeasureHorizontal(resChanged, widthMeasureSpec, heightMeasureSpec)
+      performMeasureHorizontal(widthMeasureSpec, heightMeasureSpec)
     } else {
-      performMeasureVertical(resChanged, widthMeasureSpec, heightMeasureSpec)
+      performMeasureVertical(widthMeasureSpec, heightMeasureSpec)
     }
   }
 
-  private fun performMeasureHorizontal(resChanged: Boolean, widthMeasureSpec: Int, heightMeasureSpec: Int) {
+  private fun performMeasureHorizontal(widthMeasureSpec: Int, heightMeasureSpec: Int) {
     val plotterItems = getPlotterItems()
     val requiredWidth = measuredWidth
     val requiredHeight = measuredHeight
@@ -90,7 +91,7 @@ open class LinearPlotterGroup(orientation: Int = HORIZONTAL): PlotterGroup<Linea
         childWeight = Math.max(childParams?.weight ?: 0F, 0F)
         weightTotal += childWeight
       } else {
-        it.measure(resChanged, childWidthMeasureSpec, childHeightMeasureSpec)
+        it.measure(childWidthMeasureSpec, childHeightMeasureSpec)
         totalWidth += it.measuredWidth
         totalHeight = Math.max(totalHeight, it.measuredHeight)
       }
@@ -112,7 +113,7 @@ open class LinearPlotterGroup(orientation: Int = HORIZONTAL): PlotterGroup<Linea
           childWeightWidth = (weightWidthTotal * childWeight / weightTotal).toInt()
           totalWidth += childWeightWidth
 
-          it.measure(resChanged, childWidthMeasureSpec, childHeightMeasureSpec)
+          it.measure(childWidthMeasureSpec, childHeightMeasureSpec)
           it.setMeasureDimension(childWeightWidth, it.measuredHeight)
           totalHeight = Math.max(totalHeight, it.measuredHeight)
         }
@@ -127,7 +128,7 @@ open class LinearPlotterGroup(orientation: Int = HORIZONTAL): PlotterGroup<Linea
     )
   }
 
-  private fun performMeasureVertical(resChanged: Boolean, widthMeasureSpec: Int, heightMeasureSpec: Int) {
+  private fun performMeasureVertical(widthMeasureSpec: Int, heightMeasureSpec: Int) {
     val plotterItems = getPlotterItems()
     val requiredWidth = measuredWidth
     val requiredHeight = measuredHeight
@@ -151,7 +152,7 @@ open class LinearPlotterGroup(orientation: Int = HORIZONTAL): PlotterGroup<Linea
         childWeight = Math.max(childParams?.weight ?: 0F, 0F)
         weightTotal += childWeight
       } else {
-        it.measure(resChanged, childWidthMeasureSpec, childHeightMeasureSpec)
+        it.measure(childWidthMeasureSpec, childHeightMeasureSpec)
         totalHeight += it.measuredHeight
         totalWidth = Math.max(totalWidth, it.measuredWidth)
       }
@@ -173,7 +174,7 @@ open class LinearPlotterGroup(orientation: Int = HORIZONTAL): PlotterGroup<Linea
           childWeightHeight = (weightHeightTotal * childWeight / weightTotal).toInt()
           totalHeight += childWeightHeight
 
-          it.measure(resChanged, childWidthMeasureSpec, childHeightMeasureSpec)
+          it.measure(childWidthMeasureSpec, childHeightMeasureSpec)
           it.setMeasureDimension(it.measuredWidth, childWeightHeight)
           totalWidth = Math.max(totalWidth, it.measuredWidth)
         }
@@ -223,7 +224,7 @@ open class LinearPlotterGroup(orientation: Int = HORIZONTAL): PlotterGroup<Linea
 
   /* Draw */
 
-  override fun onDraw(bound: Rect, canvas: Canvas, itemData: ItemData?) {
+  override fun onDraw(context: Context, bound: Rect, canvas: Canvas, itemData: ItemData?) {
     val left = bound.left
     val top = bound.top
     val plotterItems = getPlotterItems()
@@ -232,7 +233,7 @@ open class LinearPlotterGroup(orientation: Int = HORIZONTAL): PlotterGroup<Linea
       var drawLeft = left
 
       plotterItems.forEach {
-        it.draw(drawLeft, top, canvas, itemData)
+        it.draw(context, drawLeft, top, canvas, itemData)
         drawLeft += it.measuredWidth
       }
 
@@ -240,7 +241,7 @@ open class LinearPlotterGroup(orientation: Int = HORIZONTAL): PlotterGroup<Linea
       var drawTop = top
 
       plotterItems.forEach {
-        it.draw(left, drawTop, canvas, itemData)
+        it.draw(context, left, drawTop, canvas, itemData)
         drawTop += it.measuredHeight
       }
     }

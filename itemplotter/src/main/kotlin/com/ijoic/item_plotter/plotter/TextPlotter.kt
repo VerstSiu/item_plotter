@@ -17,6 +17,7 @@
  */
 package com.ijoic.item_plotter.plotter
 
+import android.content.Context
 import android.graphics.*
 import com.ijoic.item_plotter.ItemData
 import com.ijoic.item_plotter.Plotter
@@ -45,7 +46,7 @@ open class TextPlotter: Plotter() {
 
   /* Draw */
 
-  override fun onDraw(bound: Rect, canvas: Canvas, itemData: ItemData?) {
+  override fun onDraw(context: Context, bound: Rect, canvas: Canvas, itemData: ItemData?) {
     textStyle.drawText(bound, canvas, getBindString(itemData, unbindReplace = this.text))
   }
 }

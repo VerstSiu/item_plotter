@@ -174,34 +174,6 @@ abstract class Plotter {
    */
   protected fun getParamsHeight(defaultHeight: Int = ViewGroup.LayoutParams.WRAP_CONTENT) = layoutParams?.height ?: defaultHeight
 
-  /* Resources */
-
-  private var firstInit = false
-
-  /**
-   * Resources manager.
-   */
-  var resManager: ResManager? = null
-
-  /**
-   * Prepare resource.
-   *
-   * <p>Returns true if config changed or first init not started.</p>
-   *
-   * @param context context.
-   */
-  internal open fun prepareResource(context: Context): Boolean {
-    val oldFirstInit = firstInit
-    val resManager = this.resManager
-    firstInit = true
-
-    if (resManager != null && resManager.checkResChanged(context)) {
-      resManager.prepareResource(context)
-      return true
-    }
-    return !oldFirstInit
-  }
-
   /* Measure */
 
   private var innerMeasuredWidth: Int = 0
@@ -226,12 +198,11 @@ abstract class Plotter {
   /**
    * Measure.
    *
-   * @param resChanged resources changed status.
    * @param widthMeasureSpec width measure spec.
    * @param heightMeasureSpec height measure spec.
    */
-  open fun measure(resChanged: Boolean, widthMeasureSpec: Int, heightMeasureSpec: Int) {
-    if (!resChanged && !isMeasureChanged(widthMeasureSpec, heightMeasureSpec)) {
+  open fun measure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+    if (!isMeasureChanged(widthMeasureSpec, heightMeasureSpec)) {
       return
     }
 
@@ -449,6 +420,28 @@ abstract class Plotter {
     return null
   }
 
+  /* Resources */
+
+  /**
+   * Resources manager.
+   */
+  var resManager: ResManager? = null
+
+  /**
+   * Prepare resource.
+   *
+   * <p>Returns true if config changed or first init not started.</p>
+   *
+   * @param context context.
+   */
+  private fun prepareResource(context: Context) {
+    val resManager = this.resManager
+
+    if (resManager != null && resManager.checkResChanged(context)) {
+      resManager.prepareResource(context)
+    }
+  }
+
   /* Draw */
 
   /**
@@ -459,31 +452,37 @@ abstract class Plotter {
   /**
    * Draw plotter content.
    *
+   * @param context context.
    * @param left left position.
    * @param top top position.
    * @param canvas canvas.
    * @param itemData item data.
    */
-  fun draw(left: Int, top: Int, canvas: Canvas, itemData: ItemData?) {
+  fun draw(context: Context, left: Int, top: Int, canvas: Canvas, itemData: ItemData?) {
+    // prepare resource
+    prepareResource(context)
+
+    // draw content
     val width = measuredWidth
     val height = measuredHeight
     val bound = RectPool.obtain()
     bound.set(left, top, left + width, top + height)
-
     backgroundStyle.drawBackground(bound, canvas, renderAppend = {
-      onDraw(it, canvas, itemData)
+      onDraw(context, it, canvas, itemData)
     })
 
+    // resource release
     RectPool.release(bound)
   }
 
   /**
    * Draw while width or height is not null.
    *
+   * @param context context.
    * @param bound bound.
    * @param itemData item data.
    * @param canvas canvas.
    */
-  protected abstract fun onDraw(bound: Rect, canvas: Canvas, itemData: ItemData?)
+  protected abstract fun onDraw(context: Context, bound: Rect, canvas: Canvas, itemData: ItemData?)
 
 }

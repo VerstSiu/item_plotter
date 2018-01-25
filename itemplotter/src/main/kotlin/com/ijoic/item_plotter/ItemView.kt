@@ -121,16 +121,11 @@ open class ItemView(context: Context, attrs: AttributeSet? = null): View(context
 
     when {
       plotter != null -> {
-        measurePlotterItem(plotter, widthMeasureSpec, heightMeasureSpec)
+        plotter.measure(widthMeasureSpec, heightMeasureSpec)
         setMeasuredDimension(plotter.measuredWidth, plotter.measuredHeight)
       }
       else -> super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
-  }
-
-  private fun measurePlotterItem(plotter: Plotter, widthMeasureSpec: Int, heightMeasureSpec: Int) {
-    val resChanged = plotter.prepareResource(context)
-    plotter.measure(resChanged, widthMeasureSpec, heightMeasureSpec)
   }
 
   /* TouchEvent */
@@ -176,9 +171,9 @@ open class ItemView(context: Context, attrs: AttributeSet? = null): View(context
     if (canvas != null) {
       // perform auto measure when plotter changed
       if (lastPlotterState.checkUpgrade()) {
-        measurePlotterItem(plotter, cacheWidthMeasureSpec, cacheHeightMeasureSpec)
+        plotter.measure(cacheWidthMeasureSpec, cacheHeightMeasureSpec)
       }
-      readPlotterInstance()?.draw(0, 0, canvas, readItemDataInstance())
+      plotter.draw(context, 0, 0, canvas, readItemDataInstance())
     }
   }
 }
