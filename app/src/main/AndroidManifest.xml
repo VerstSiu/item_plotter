@@ -25,6 +25,11 @@
       android:label="@string/test_case_plotter_picker"
       android:name=".test.picker.TestPlotterPickerActivity"/>
 
+    <!-- test plotter picker -->
+    <activity
+      android:label="@string/test_case_res_change"
+      android:name=".test.res_change.TestResChangeActivity"/>
+
   </application>
 
 </manifest>

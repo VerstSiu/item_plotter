@@ -1,4 +1,4 @@
-package app.ijoic.item_plotter.test.picker.constants
+package app.ijoic.item_plotter.test.res_change.config
 
 /**
  * Render config.
@@ -8,7 +8,7 @@ package app.ijoic.item_plotter.test.picker.constants
  */
 object RenderConfig {
   /**
-   * Display simple.
+   * Theme red.
    */
-  var displaySimple = false
+  var themeRed = false
 }

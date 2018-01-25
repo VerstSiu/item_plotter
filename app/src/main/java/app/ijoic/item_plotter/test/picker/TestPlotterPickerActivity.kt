@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView
 import app.ijoic.item_plotter.R
 import app.ijoic.item_plotter.common.entity.User
 import app.ijoic.item_plotter.test.picker.adapter.TestPickerAdapter
-import app.ijoic.item_plotter.test.picker.constants.RenderConfig
+import app.ijoic.item_plotter.test.picker.config.RenderConfig
 import kotlinx.android.synthetic.main.act_test_picker.*
 
 /**

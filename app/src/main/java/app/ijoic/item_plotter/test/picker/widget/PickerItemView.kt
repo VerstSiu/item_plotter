@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import app.ijoic.item_plotter.common.constants.BindKey
 import app.ijoic.item_plotter.common.entity.User
 import app.ijoic.item_plotter.common.widget.ItemPlotterSource
-import app.ijoic.item_plotter.test.picker.constants.RenderConfig
+import app.ijoic.item_plotter.test.picker.config.RenderConfig
 import com.ijoic.item_plotter.ItemView
 import com.ijoic.item_plotter.data.MixItemData
 

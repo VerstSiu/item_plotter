@@ -10,6 +10,7 @@ import app.ijoic.item_plotter.R
 import app.ijoic.item_plotter.test.list.adapter.TestListAdapter
 import app.ijoic.item_plotter.test.list.entity.TestAction
 import app.ijoic.item_plotter.test.picker.TestPlotterPickerActivity
+import app.ijoic.item_plotter.test.res_change.TestResChangeActivity
 
 /**
  * Test list activity.
@@ -32,7 +33,8 @@ class TestListActivity : AppCompatActivity() {
     }
 
     adapter.itemsData = listOf(
-        TestAction(R.string.test_case_plotter_picker, TestPlotterPickerActivity::class.java)
+        TestAction(R.string.test_case_plotter_picker, TestPlotterPickerActivity::class.java),
+        TestAction(R.string.test_case_res_change, TestResChangeActivity::class.java)
     )
     adapter.notifyDataSetChanged()
   }

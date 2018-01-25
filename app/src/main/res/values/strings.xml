@@ -3,6 +3,7 @@
 
   <!-- main -->
   <string name="test_case_plotter_picker">Plotter Picker</string>
+  <string name="test_case_res_change">Res Change</string>
 
   <!-- test picker -->
   <string name="action_toggle_plotter">Toggle</string>
