@@ -23,6 +23,7 @@ import android.support.annotation.IdRes
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import com.ijoic.item_plotter.config.ConfigState
 
 /**
  * Item view.
@@ -109,7 +110,13 @@ open class ItemView(context: Context, attrs: AttributeSet? = null): View(context
 
   /* Measure */
 
+  private var cacheWidthMeasureSpec = 0
+  private var cacheHeightMeasureSpec = 0
+
   override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+    cacheWidthMeasureSpec = widthMeasureSpec
+    cacheHeightMeasureSpec = heightMeasureSpec
+
     val plotter = readPlotterInstance()
 
     when {
@@ -157,10 +164,20 @@ open class ItemView(context: Context, attrs: AttributeSet? = null): View(context
 
   private fun readPressedPlotterId(event: MotionEvent) = readPlotterInstance()?.getTouchPlotterId(0, 0, event.x.toInt(), event.y.toInt()) ?: 0
 
+  /* Draw */
+
+  private val lastPlotterState = ConfigState<Plotter?>(null)
+
   override fun onDraw(canvas: Canvas?) {
     super.onDraw(canvas)
+    val plotter = readPlotterInstance() ?: return
+    lastPlotterState.setValue(plotter)
 
     if (canvas != null) {
+      // perform auto measure when plotter changed
+      if (lastPlotterState.checkUpgrade()) {
+        measurePlotterItem(plotter, cacheWidthMeasureSpec, cacheHeightMeasureSpec)
+      }
       readPlotterInstance()?.draw(0, 0, canvas, readItemDataInstance())
     }
   }
