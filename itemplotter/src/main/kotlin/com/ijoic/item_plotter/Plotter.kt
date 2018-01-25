@@ -186,6 +186,8 @@ abstract class Plotter {
   /**
    * Prepare resource.
    *
+   * <p>Returns true if config changed or first init not started.</p>
+   *
    * @param context context.
    */
   internal open fun prepareResource(context: Context): Boolean {
@@ -197,7 +199,7 @@ abstract class Plotter {
       resManager.prepareResource(context)
       return true
     }
-    return oldFirstInit
+    return !oldFirstInit
   }
 
   /* Measure */

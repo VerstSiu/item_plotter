@@ -23,7 +23,6 @@ import android.support.annotation.IdRes
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import com.ijoic.item_plotter.source.PlotterPicker
 
 /**
  * Item view.
@@ -45,7 +44,7 @@ open class ItemView(context: Context, attrs: AttributeSet? = null): View(context
    *
    * <p>Use to override and provide plotter instance when item view is attached to window.
    */
-  var plotterPicker: PlotterPicker? = null
+  var plotterPicker: (() ->Plotter)? = null
 
   /**
    * Returns plotter instance or null if not any plotter instance could be read or created.
@@ -54,7 +53,7 @@ open class ItemView(context: Context, attrs: AttributeSet? = null): View(context
    * @see plotterPicker
    */
   private fun readPlotterInstance(): Plotter? {
-    return plotter ?: plotterPicker?.getDisplayPlotter()
+    return plotter ?: plotterPicker?.invoke()
   }
 
   /* ItemData */
@@ -105,38 +104,18 @@ open class ItemView(context: Context, attrs: AttributeSet? = null): View(context
 
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
-    plotter = null
-    plotterPicker = null
-    itemData = null
-    itemDataProvider = null
     itemClickListener = null
   }
 
   /* Measure */
 
   override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-    val plotter = this.plotter
-    val plotterPicker = this.plotterPicker
+    val plotter = readPlotterInstance()
 
     when {
       plotter != null -> {
         measurePlotterItem(plotter, widthMeasureSpec, heightMeasureSpec)
         setMeasuredDimension(plotter.measuredWidth, plotter.measuredHeight)
-      }
-      plotterPicker != null -> {
-        // pre measure all related plotters
-        plotterPicker.getPlotterItems().forEach {
-          measurePlotterItem(it, widthMeasureSpec, heightMeasureSpec)
-        }
-
-        // update measure result with display plotter
-        val displayPlotter = plotterPicker.getDisplayPlotter()
-
-        if (displayPlotter != null) {
-          setMeasuredDimension(displayPlotter.measuredWidth, displayPlotter.measuredHeight)
-        } else {
-          super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        }
       }
       else -> super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }

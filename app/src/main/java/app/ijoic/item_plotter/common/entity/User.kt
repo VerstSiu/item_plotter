@@ -1,4 +1,4 @@
-package app.ijoic.item_plotter.entity
+package app.ijoic.item_plotter.common.entity
 
 /**
  * User.

@@ -1,3 +1,10 @@
 <resources>
   <string name="app_name">Item Plotter</string>
+
+  <!-- main -->
+  <string name="test_case_plotter_picker">Plotter Picker</string>
+
+  <!-- test picker -->
+  <string name="action_toggle_plotter">Toggle</string>
+
 </resources>

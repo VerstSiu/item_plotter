@@ -1,4 +1,4 @@
-package app.ijoic.item_plotter.adapter.holder
+package app.ijoic.item_plotter.common.adapter.holder
 
 import android.support.annotation.IdRes
 import android.support.v7.widget.RecyclerView
