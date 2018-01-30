@@ -478,10 +478,14 @@ abstract class Plotter {
   /**
    * Draw while width or height is not null.
    *
+   * <p>Do use res manager to prepare draw resources, rather than access context directly here.</p>
+   *
    * @param context context.
    * @param bound bound.
    * @param itemData item data.
    * @param canvas canvas.
+   *
+   * @see ResManager
    */
   protected abstract fun onDraw(context: Context, bound: Rect, canvas: Canvas, itemData: ItemData?)
 
