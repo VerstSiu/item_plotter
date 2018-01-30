@@ -10,6 +10,7 @@ import app.ijoic.item_plotter.test.res_change.config.RenderConfig
 import app.ijoic.item_plotter.test.res_change.res.SkinResManager
 import com.ijoic.item_plotter.ItemView
 import com.ijoic.item_plotter.data.MixItemData
+import com.ijoic.item_plotter.plotter.IconRightTextPlotter
 import com.ijoic.item_plotter.plotter.TextPlotter
 
 /**
@@ -21,10 +22,16 @@ import com.ijoic.item_plotter.plotter.TextPlotter
 class ResItemView(context: Context, attrs: AttributeSet? = null): ItemView(context, attrs) {
 
   init {
-    plotter = TextPlotter().apply {
+    plotter = IconRightTextPlotter().apply {
+
+      icon = context.resources.getDrawable(R.mipmap.ic_launcher)
+      iconStyle.apply {
+        gravity = Gravity.END or Gravity.CENTER_VERTICAL
+      }
 
       textStyle.apply {
-        gravity = Gravity.CENTER
+        margin.right = 20
+        gravity = Gravity.END or Gravity.CENTER_VERTICAL
         textColor = 0xFF8BC34A.toInt()
         textSize = 48F
       }

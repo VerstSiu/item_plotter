@@ -50,6 +50,7 @@ class DrawableStyle: PlotterStyle() {
       drawable.draw(canvas)
 
       canvas.restoreToCount(restoreCount)
+      renderAppend?.invoke(drawableBound)
     })
     RectPool.release(drawableBound)
   }
