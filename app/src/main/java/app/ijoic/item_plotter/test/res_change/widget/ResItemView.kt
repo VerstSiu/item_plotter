@@ -11,7 +11,6 @@ import app.ijoic.item_plotter.test.res_change.res.SkinResManager
 import com.ijoic.item_plotter.ItemView
 import com.ijoic.item_plotter.data.MixItemData
 import com.ijoic.item_plotter.plotter.IconRightTextPlotter
-import com.ijoic.item_plotter.plotter.TextPlotter
 
 /**
  * Res item view.

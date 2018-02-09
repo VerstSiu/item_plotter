@@ -42,6 +42,11 @@ class TextStyle: PlotterStyle() {
   var textSize: Float = 24F
 
   /**
+   * Text size provider: fun(characterSize: Int): Float
+   */
+  var textSizeProvider: ((Int) -> Float)? = null
+
+  /**
    * Type face.
    */
   var typeface: Typeface? = null
@@ -82,7 +87,7 @@ class TextStyle: PlotterStyle() {
     val textPaint = paint ?: PaintPool.obtainSmoothFillPaint()
 
     textPaint.textAlign = Paint.Align.LEFT
-    textPaint.textSize = textSize
+    textPaint.textSize = getTextSize(text)
     textPaint.typeface = typeface
     textPaint.getTextBounds(text, 0, text.length, textBound)
 
@@ -106,8 +111,6 @@ class TextStyle: PlotterStyle() {
     val textColor = this.textColor
     val baseWidth = padding.left + padding.right
     val baseHeight = padding.top + padding.bottom
-    val textSize = this.textSize
-    val textSizeInt = textSize.toInt()
 
     if (text == null || text.isEmpty() || textBound.isEmpty || textColor == Color.TRANSPARENT) {
       // always run render append, even if background is not required to render.
@@ -119,6 +122,8 @@ class TextStyle: PlotterStyle() {
       }
       return
     }
+    val textSize = getTextSize(text)
+    val textSizeInt = textSize.toInt()
     val textPaint = paint ?: PaintPool.obtainSmoothFillPaint()
     textPaint.textAlign = Paint.Align.LEFT
     textPaint.color = textColor
@@ -155,5 +160,19 @@ class TextStyle: PlotterStyle() {
     RectPool.release(blockRect)
 
     PaintPool.checkNullRelease(paint, textPaint)
+  }
+
+  /**
+   * Returns display text size.
+   *
+   * @param text draw text.
+   */
+  private fun getTextSize(text: String): Float {
+    val provider = textSizeProvider
+
+    if (provider != null) {
+      return provider.invoke(text.length)
+    }
+    return textSize
   }
 }
